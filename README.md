@@ -21,8 +21,8 @@ Desenvolver uma aplicação móvel que apresente a minha localidade de nasciment
 
 ## 👤 Sobre Mim
 
-- **Nome:** [Teu Nome]
-- **Curso:** Engenharia da Computação Gráfica e Multimédia / Engenharia Informática  
+- **Nome:** João Barbosa
+- **Curso:** Engenharia Informática  
 - **Instituição:** Instituto Politécnico de Viana do Castelo  
 - **Objetivos:** Desenvolver competências em desenvolvimento móvel e design de interfaces  
 - **Interesses:** Exercício físico, tecnologia e cultura local  
@@ -47,7 +47,7 @@ Desenvolver uma aplicação móvel que apresente a minha localidade de nasciment
 
 ### 🧑‍🎤 Personalidades Locais
 
-- [Nome de uma personalidade local relevante]
+- Mickael Akordeon
 
 ### ℹ️ Informações Úteis
 
@@ -57,12 +57,13 @@ Desenvolver uma aplicação móvel que apresente a minha localidade de nasciment
 
 ### 🏨 Alojamento
 
-- [Nome de alojamento local]  
-- [Outro alojamento local]
+- Residencial São Cristovão  
+- Laranjalimão Guest House
 
 ### ⚽ Clubes Desportivos
 
-- [Nome de clube desportivo local]
+- Grupo Desportivo de Freixo
+- Grupo Desportivo Vitorino de Peães
 
 ## 🌟 Funcionalidades da App
 
@@ -91,22 +92,6 @@ Os protótipos foram desenhados para planear a estrutura e navegação da aplica
 - Implementação de backend com PostgreSQL para sincronização de dados  
 - Adição de funcionalidades interativas, como comentários e avaliações  
 - Integração de notificações para eventos locais  
-
-## 📝 Relatório
-
-O relatório do projeto inclui:
-
-- Objetivo e descrição sumária do exercício  
-- Funcionalidades implementadas  
-- Detalhes sobre a implementação, com excertos de código  
-- Aspetos que poderiam ser melhorados  
-- Protótipos de Baixa-Fidelidade (PBF)  
-
-## 📂 Entrega
-
-- **Data de Entrega:** 22 de abril de 2025 até às 23:59  
-- **Formato:** Ficheiro `.zip` contendo o projeto Ionic (excluindo as pastas `node_modules`, `.angular` e `.vscode`) e o relatório  
-- **Nome do Ficheiro:** `NumAluno_NomeAluno_Localidade.zip`  
 
 ## 📜 Licença
 
