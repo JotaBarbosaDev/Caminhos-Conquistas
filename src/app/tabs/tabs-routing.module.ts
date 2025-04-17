@@ -1,6 +1,5 @@
-// src/app/tabs/tabs-routing.module.ts
 import {NgModule} from "@angular/core";
-import {RouterModule, Routes} from "@angular/router";
+import {Routes, RouterModule} from "@angular/router";
 import {TabsPage} from "./tabs.page";
 
 const routes: Routes = [
@@ -9,9 +8,9 @@ const routes: Routes = [
     component: TabsPage,
     children: [
       {
-        path: "gostos",
+        path: "perfil",
         loadChildren: () =>
-          import("../gostos/gostos.module").then((m) => m.GostosModule), // Corrigido
+          import("../perfil/perfil.module").then((m) => m.PerfilPageModule),
       },
       {
         path: "conquistas",
@@ -21,9 +20,9 @@ const routes: Routes = [
           ),
       },
       {
-        path: "perfil",
+        path: "gostos",
         loadChildren: () =>
-          import("../perfil/perfil.module").then((m) => m.PerfilPageModule),
+          import("../gostos/gostos.module").then((m) => m.GostosModule),
       },
       {
         path: "terra",
@@ -39,7 +38,7 @@ const routes: Routes = [
       },
       {
         path: "",
-        redirectTo: "/tabs/home",
+        redirectTo: "perfil",
         pathMatch: "full",
       },
     ],

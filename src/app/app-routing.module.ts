@@ -4,35 +4,13 @@ import {Routes, RouterModule} from "@angular/router";
 const routes: Routes = [
   {
     path: "",
-    redirectTo: "perfil",
+    redirectTo: "tabs",
     pathMatch: "full",
   },
   {
-    path: "perfil",
+    path: "tabs",
     loadChildren: () =>
-      import("./perfil/perfil.module").then((m) => m.PerfilPageModule),
-  },
-  {
-    path: "conquistas",
-    loadChildren: () =>
-      import("./conquistas/conquistas.module").then(
-        (m) => m.ConquistasPageModule
-      ),
-  },
-  {
-    path: "gostos",
-    loadChildren: () =>
-      import("./gostos/gostos.module").then((m) => m.GostosModule),
-  },
-  {
-    path: "terra",
-    loadChildren: () =>
-      import("./terra/terra.module").then((m) => m.TerraPageModule),
-  },
-  {
-    path: "explorar",
-    loadChildren: () =>
-      import("./explorar/explorar.module").then((m) => m.ExplorarPageModule),
+      import("./tabs/tabs.module").then((m) => m.TabsPageModule),
   },
 ];
 
@@ -40,4 +18,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {} // ← ESSA exportação é ESSENCIAL!
