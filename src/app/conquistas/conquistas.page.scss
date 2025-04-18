@@ -1,0 +1,20 @@
+.horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+  padding: 8px 0;
+  scrollbar-width: none;
+}
+.horizontal-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.horizontal-scroll ion-card {
+  flex: 0 0 200px;
+  margin-right: 12px;
+}
+
+.horizontal-scroll ion-card img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}

@@ -1,27 +1,20 @@
-#container {
-  text-align: center;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+.horizontal-scroll {
+  display: flex;
+  overflow-x: auto;
+  padding: 8px 0;
+  scrollbar-width: none;
+}
+.horizontal-scroll::-webkit-scrollbar {
+  display: none;
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+.horizontal-scroll ion-card {
+  flex: 0 0 200px;
+  margin-right: 12px;
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-
-  color: #8c8c8c;
-
-  margin: 0;
-}
-
-#container a {
-  text-decoration: none;
+.horizontal-scroll ion-card img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
 }

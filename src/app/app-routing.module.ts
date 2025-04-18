@@ -1,21 +1,20 @@
 import {NgModule} from "@angular/core";
-import {Routes, RouterModule} from "@angular/router";
+import {PreloadAllModules, RouterModule, Routes} from "@angular/router";
 
 const routes: Routes = [
-  {
-    path: "",
-    redirectTo: "tabs",
-    pathMatch: "full",
-  },
+  {path: "", redirectTo: "tabs/perfil", pathMatch: "full"},
   {
     path: "tabs",
     loadChildren: () =>
       import("./tabs/tabs.module").then((m) => m.TabsPageModule),
   },
+  {path: "**", redirectTo: "tabs/perfil"},
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [
+    RouterModule.forRoot(routes, {preloadingStrategy: PreloadAllModules}),
+  ],
   exports: [RouterModule],
 })
-export class AppRoutingModule {} // ← ESSA exportação é ESSENCIAL!
+export class AppRoutingModule {}

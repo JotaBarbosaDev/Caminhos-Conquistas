@@ -1,16 +1,25 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
+<ion-header>
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
-        <ion-back-button default-href="#" text="Voltar"></ion-back-button>
-      </ion-buttons>
+      <ion-back-button defaultHref="/tabs/explorar"></ion-back-button>
+    </ion-buttons>
     <ion-title>Explorar</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Explorar</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <h3>Atividades e Eventos</h3>
+  <div class="horizontal-scroll">
+    <ion-card *ngFor="let e of events" (click)="openDetails(e)">
+      <img src="assets/img/{{ e.img }}" alt="{{ e.title }}" />
+      <ion-card-header>
+        <ion-card-title>{{ e.title }}</ion-card-title>
+        <ion-card-subtitle>{{ e.location }} • {{ e.date }}</ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
+  </div>
 </ion-content>

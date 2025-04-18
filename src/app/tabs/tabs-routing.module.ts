@@ -1,5 +1,5 @@
 import {NgModule} from "@angular/core";
-import {Routes, RouterModule} from "@angular/router";
+import {RouterModule, Routes} from "@angular/router";
 import {TabsPage} from "./tabs.page";
 
 const routes: Routes = [
@@ -13,16 +13,16 @@ const routes: Routes = [
           import("../perfil/perfil.module").then((m) => m.PerfilPageModule),
       },
       {
+        path: "gostos",
+        loadChildren: () =>
+          import("../gostos/gostos.module").then((m) => m.GostosPageModule),
+      },
+      {
         path: "conquistas",
         loadChildren: () =>
           import("../conquistas/conquistas.module").then(
             (m) => m.ConquistasPageModule
           ),
-      },
-      {
-        path: "gostos",
-        loadChildren: () =>
-          import("../gostos/gostos.module").then((m) => m.GostosModule),
       },
       {
         path: "terra",
@@ -36,17 +36,10 @@ const routes: Routes = [
             (m) => m.ExplorarPageModule
           ),
       },
-      {
-        path: "",
-        redirectTo: "perfil",
-        pathMatch: "full",
-      },
+      {path: "", redirectTo: "perfil", pathMatch: "full"},
     ],
   },
 ];
 
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
+@NgModule({imports: [RouterModule.forChild(routes)], exports: [RouterModule]})
 export class TabsPageRoutingModule {}

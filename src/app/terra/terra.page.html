@@ -1,12 +1,50 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
+<ion-header>
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
-        <ion-back-button default-href="#" text="Voltar"></ion-back-button>
-      </ion-buttons>
-    <ion-title>Terra</ion-title>
+      <ion-back-button defaultHref="/tabs/terra"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Minha Terra</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
 
+  <h3>Distrito de Viana do Castelo</h3>
+  <p>{{ districtDescription }}</p>
+  <div class="horizontal-scroll">
+    <ion-card *ngFor="let p of district" (click)="openDetails(p)">
+      <img src="assets/img/{{ p.img }}" alt="{{ p.title }}" />
+      <ion-card-header>
+        <ion-card-title>{{ p.title }}</ion-card-title>
+        <ion-card-subtitle>{{ p.subtitle }}</ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
+  </div>
+
+  <h3>Concelho de Ponte de Lima</h3>
+  <p>{{ municipalityDescription }}</p>
+  <div class="horizontal-scroll">
+    <ion-card *ngFor="let p of municipality" (click)="openDetails(p)">
+      <img src="assets/img/{{ p.img }}" alt="{{ p.title }}" />
+      <ion-card-header>
+        <ion-card-title>{{ p.title }}</ion-card-title>
+        <ion-card-subtitle>{{ p.subtitle }}</ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
+  </div>
+
+  <h3>Freguesia de Freixo</h3>
+  <p>{{ parishDescription }}</p>
+  <div class="horizontal-scroll">
+    <ion-card *ngFor="let p of parish" (click)="openDetails(p)">
+      <img src="assets/img/{{ p.img }}" alt="{{ p.title }}" />
+      <ion-card-header>
+        <ion-card-title>{{ p.title }}</ion-card-title>
+        <ion-card-subtitle>{{ p.subtitle }}</ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
+  </div>
 </ion-content>
