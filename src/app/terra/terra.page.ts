@@ -73,7 +73,7 @@ export class TerraPage {
       component: DetailModalComponent,
       componentProps: {
         title: item.title,
-        img: `assets/img/${item.img}`,
+        img: `assets/images/${item.img}`,
         description: item.description,
       },
     });
