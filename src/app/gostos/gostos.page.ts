@@ -28,14 +28,14 @@ export class GostosPage implements OnInit {
     {
       title: "Noites de Cinema",
       subtitle: "Sessões em casa",
-      img: "amigos.jpg",
+      img: "cinema.jpg",
       description: "Adoro ver os últimos lançamentos com pipocas e amigos.",
       favorite: false
     },
     {
       title: "Jogos de Tabuleiro",
       subtitle: "Amigos",
-      img: "boardgames.jpg",
+      img: "tabuleiro.jpg",
       description:
         "Diversão estratégica com clássicos como Catan e Carcassonne.",
       favorite: false
@@ -50,40 +50,47 @@ export class GostosPage implements OnInit {
       favorite: false
     },
     {
-      title: "Caldo Verde",
-      subtitle: "Sopa Tradicional",
-      img: "caldo-verde.jpg",
-      description: "Sopa reconfortante com couve e chouriço.",
+      title: "Sarrabulho",
+      subtitle: "Prato Tradicional em Ponte de Lima",
+      img: "sarrabulho.webp",
+      description: "Carne de porco com arroz de sangue e especiarias.",
       favorite: false
     },
     {
-      title: "Cavacas de Freixo",
-      subtitle: "Doce Local",
-      img: "cavacas.jpg",
-      description: "Bolo doce típico de massa folhada e glacê.",
+      title: "Sushi",
+      subtitle: "Comida Japonêsa",
+      img: "sushi.webp",
+      description: "Rolo de arroz com peixe fresco e vegetais.",
+      favorite: false
+    },
+    {
+      title: "Bacalhau à Brás",
+      subtitle: "Prato Tradicional Português",
+      img: "bacalhaubras.jpg",
+      description: "Bacalhau desfiado com batata frita e ovos mexidos.",
       favorite: false
     },
   ];
   desporto: Item[] = [
     {
-      title: "Futebol",
-      subtitle: "Ponte de Lima FC",
-      img: "futebol.jpg",
-      description: "Partidas aos fins de semana no campo local.",
+      title: "Ginasio",
+      subtitle: "Treinos regulares",
+      img: "ginasio.webp",
+      description: "Treinos de força e resistência para manter a forma.",
       favorite: false
     },
     {
-      title: "Natação",
-      subtitle: "Piscina Municipal",
-      img: "natacao.jpg",
-      description: "Treinos regulares para manter forma física.",
+      title: "Ténis",
+      subtitle: "Pavilhão Municipal",
+      img: "tenis.webp",
+      description: "Desporto para aliviar o stress.",
       favorite: false
     },
     {
       title: "Caminhadas",
       subtitle: "Trilhos Locais",
       img: "caminhada.png",
-      description: "Explorar a natureza em trilhos marcados.",
+      description: "Explorar a natureza em trilhos nas montanhas para sair da rotina do computador.",
       favorite: false
     },
   ];

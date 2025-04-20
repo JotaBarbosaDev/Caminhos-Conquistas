@@ -47,7 +47,7 @@ export class ConquistasPage implements OnInit {
     {
       title: "Barcelona, Espanha",
       subtitle: "2021",
-      img: "barcelona.webp",
+      img: "Barcelona.webp",
       description: "Capital catalã vibrante, arte de Gaudí e praias.",
       type: "viagem",
       date: "2021"
