@@ -1,50 +1,176 @@
-<ion-header>
-  <ion-toolbar color="primary">
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary" class="header-toolbar">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/terra"></ion-back-button>
     </ion-buttons>
     <ion-title>Minha Terra</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleMap()">
+        <ion-icon [name]="showMap ? 'images-outline' : 'map-outline'"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content></ion-refresher-content>
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Puxe para atualizar" refreshingSpinner="circles"></ion-refresher-content>
   </ion-refresher>
 
-  <h3>Distrito de Viana do Castelo</h3>
-  <p>{{ districtDescription }}</p>
-  <div class="horizontal-scroll">
-    <ion-card *ngFor="let p of district" (click)="openDetails(p)">
-      <img src="assets/img/{{ p.img }}" alt="{{ p.title }}" />
-      <ion-card-header>
-        <ion-card-title>{{ p.title }}</ion-card-title>
-        <ion-card-subtitle>{{ p.subtitle }}</ion-card-subtitle>
-      </ion-card-header>
-    </ion-card>
+  <!-- Mapa interativo (visível quando toggleMap é true) -->
+  <div *ngIf="showMap" class="map-container animate-fade-in">
+    <h2 class="page-title">Mapa da Região</h2>
+    <div class="map-frame">
+      <!-- Inserir aqui o mapa (poderia ser uma imagem ou um componente de mapa interativo) -->
+      <img src="assets/img/map-placeholder.jpg" alt="Mapa da região" class="region-map" />
+      
+      <div class="map-legend">
+        <div class="legend-item">
+          <div class="legend-marker district"></div>
+          <span>Distrito de Viana do Castelo</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-marker municipality"></div>
+          <span>Concelho de Ponte de Lima</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-marker parish"></div>
+          <span>Freguesia de Freixo</span>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <h3>Concelho de Ponte de Lima</h3>
-  <p>{{ municipalityDescription }}</p>
-  <div class="horizontal-scroll">
-    <ion-card *ngFor="let p of municipality" (click)="openDetails(p)">
-      <img src="assets/img/{{ p.img }}" alt="{{ p.title }}" />
-      <ion-card-header>
-        <ion-card-title>{{ p.title }}</ion-card-title>
-        <ion-card-subtitle>{{ p.subtitle }}</ion-card-subtitle>
-      </ion-card-header>
-    </ion-card>
+  <!-- Conteúdo normal (visível quando toggleMap é false) -->
+  <div *ngIf="!showMap" class="regions-content">
+    <!-- Distrito -->
+    <div class="region-section animate-fade-in">
+      <div class="section-header">
+        <div class="title-container">
+          <ion-icon name="business-outline" color="primary"></ion-icon>
+          <h2 class="section-title">Distrito de Viana do Castelo</h2>
+        </div>
+        <ion-badge color="primary" class="region-badge">Distrito</ion-badge>
+      </div>
+      
+      <div class="region-description">
+        <p>{{ districtDescription }}</p>
+      </div>
+      
+      <div class="image-gallery">
+        <div class="gallery-header">
+          <h3>Pontos de Interesse</h3>
+          <ion-button fill="clear" size="small">Ver todos <ion-icon name="arrow-forward-outline" slot="end"></ion-icon></ion-button>
+        </div>
+        
+        <div class="horizontal-scroll">
+          <ion-card *ngFor="let p of district" (click)="openDetails(p)" class="place-card animate-fade-in">
+            <div class="img-container">
+              <img src="assets/img/{{ p.img }}" alt="{{ p.title }}" />
+              <div class="overlay-gradient"></div>
+            </div>
+            <ion-card-header>
+              <ion-card-title>{{ p.title }}</ion-card-title>
+              <ion-card-subtitle>{{ p.subtitle }}</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-button fill="clear" size="small" class="details-button">
+                Ver detalhes
+                <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+              </ion-button>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Município -->
+    <div class="region-section animate-fade-in">
+      <div class="section-header">
+        <div class="title-container">
+          <ion-icon name="home-outline" color="success"></ion-icon>
+          <h2 class="section-title">Concelho de Ponte de Lima</h2>
+        </div>
+        <ion-badge color="success" class="region-badge">Concelho</ion-badge>
+      </div>
+      
+      <div class="region-description">
+        <p>{{ municipalityDescription }}</p>
+      </div>
+      
+      <div class="image-gallery">
+        <div class="gallery-header">
+          <h3>Pontos de Interesse</h3>
+          <ion-button fill="clear" size="small">Ver todos <ion-icon name="arrow-forward-outline" slot="end"></ion-icon></ion-button>
+        </div>
+        
+        <div class="horizontal-scroll">
+          <ion-card *ngFor="let p of municipality" (click)="openDetails(p)" class="place-card animate-fade-in">
+            <div class="img-container">
+              <img src="assets/img/{{ p.img }}" alt="{{ p.title }}" />
+              <div class="overlay-gradient"></div>
+            </div>
+            <ion-card-header>
+              <ion-card-title>{{ p.title }}</ion-card-title>
+              <ion-card-subtitle>{{ p.subtitle }}</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-button fill="clear" size="small" class="details-button">
+                Ver detalhes
+                <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+              </ion-button>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Freguesia -->
+    <div class="region-section animate-fade-in">
+      <div class="section-header">
+        <div class="title-container">
+          <ion-icon name="location-outline" color="tertiary"></ion-icon>
+          <h2 class="section-title">Freguesia de Freixo</h2>
+        </div>
+        <ion-badge color="tertiary" class="region-badge">Freguesia</ion-badge>
+      </div>
+      
+      <div class="region-description">
+        <p>{{ parishDescription }}</p>
+      </div>
+      
+      <div class="image-gallery">
+        <div class="gallery-header">
+          <h3>Pontos de Interesse</h3>
+          <ion-button fill="clear" size="small">Ver todos <ion-icon name="arrow-forward-outline" slot="end"></ion-icon></ion-button>
+        </div>
+        
+        <div class="horizontal-scroll">
+          <ion-card *ngFor="let p of parish" (click)="openDetails(p)" class="place-card animate-fade-in">
+            <div class="img-container">
+              <img src="assets/img/{{ p.img }}" alt="{{ p.title }}" />
+              <div class="overlay-gradient"></div>
+            </div>
+            <ion-card-header>
+              <ion-card-title>{{ p.title }}</ion-card-title>
+              <ion-card-subtitle>{{ p.subtitle }}</ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-button fill="clear" size="small" class="details-button">
+                Ver detalhes
+                <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+              </ion-button>
+            </ion-card-content>
+          </ion-card>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <h3>Freguesia de Freixo</h3>
-  <p>{{ parishDescription }}</p>
-  <div class="horizontal-scroll">
-    <ion-card *ngFor="let p of parish" (click)="openDetails(p)">
-      <img src="assets/img/{{ p.img }}" alt="{{ p.title }}" />
-      <ion-card-header>
-        <ion-card-title>{{ p.title }}</ion-card-title>
-        <ion-card-subtitle>{{ p.subtitle }}</ion-card-subtitle>
-      </ion-card-header>
-    </ion-card>
-  </div>
+  
+  <!-- Botão flutuante para voltar ao topo -->
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="showScrollButton">
+    <ion-fab-button (click)="scrollToTop()" color="light" size="small">
+      <ion-icon name="arrow-up-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

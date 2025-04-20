@@ -1,36 +1,61 @@
-<ion-header>
-  <ion-toolbar color="primary">
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary" class="header-toolbar">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/gostos"></ion-back-button>
     </ion-buttons>
-    <ion-title>Gostos</ion-title>
+    <ion-title class="ion-text-center">Meus Gostos</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content></ion-refresher-content>
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Puxe para atualizar" refreshingSpinner="circles"></ion-refresher-content>
   </ion-refresher>
 
-  <ion-segment [(ngModel)]="selectedCategory" color="primary">
-    <ion-segment-button value="conv">
+  <div class="intro-section ion-margin-bottom">
+    <h1 class="ion-no-margin">Categorias</h1>
+    <p class="ion-no-margin">Explore meus interesses em diferentes áreas</p>
+  </div>
+
+  <ion-segment [(ngModel)]="selectedCategory" (ionChange)="onCategoryChange()" color="primary" mode="ios" class="category-segment ion-margin-bottom">
+    <ion-segment-button value="conv" class="segment-button">
+      <ion-icon name="people-outline"></ion-icon>
       <ion-label>Convívio</ion-label>
     </ion-segment-button>
-    <ion-segment-button value="gastr">
+    <ion-segment-button value="gastr" class="segment-button">
+      <ion-icon name="restaurant-outline"></ion-icon>
       <ion-label>Gastronomia</ion-label>
     </ion-segment-button>
-    <ion-segment-button value="desp">
+    <ion-segment-button value="desp" class="segment-button">
+      <ion-icon name="football-outline"></ion-icon>
       <ion-label>Desporto</ion-label>
     </ion-segment-button>
   </ion-segment>
 
+  <div class="category-heading ion-padding-start">
+    <h2>
+      <span *ngIf="selectedCategory === 'conv'">Convívio e Lazer</span>
+      <span *ngIf="selectedCategory === 'gastr'">Gastronomia</span>
+      <span *ngIf="selectedCategory === 'desp'">Desporto</span>
+    </h2>
+  </div>
+
   <div class="horizontal-scroll">
-    <ion-card *ngFor="let i of getItems(selectedCategory)" (click)="openDetails(i)">
-      <img src="assets/images/{{ i.img }}" />
+    <ion-card *ngFor="let i of getItems(selectedCategory)" (click)="openDetails(i)" class="item-card animate__animated animate__fadeIn">
+      <div class="img-container">
+        <img src="assets/images/{{ i.img }}" alt="{{ i.title }}" />
+        <div class="overlay-gradient"></div>
+        <ion-icon *ngIf="i.favorite" name="heart" class="favorite-icon"></ion-icon>
+      </div>
       <ion-card-header>
-        <ion-card-title>{{ i.title }}</ion-card-title>
+        <ion-card-title class="ion-text-wrap">{{ i.title }}</ion-card-title>
         <ion-card-subtitle>{{ i.subtitle }}</ion-card-subtitle>
       </ion-card-header>
     </ion-card>
+  </div>
+  
+  <div class="empty-state" *ngIf="getItems(selectedCategory).length === 0">
+    <ion-icon name="alert-circle-outline" size="large"></ion-icon>
+    <p>Nenhum item encontrado nesta categoria.</p>
   </div>
 </ion-content>

@@ -35,3 +35,74 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+/* Estilos globais personalizados */
+:root {
+  --ion-color-primary: #3a68ef;
+  --ion-color-primary-rgb: 58, 104, 239;
+}
+
+/* Garantir que os modais tenham prioridade de exibição no z-index */
+ion-modal {
+  --backdrop-opacity: 0.6 !important;
+  --height: auto;
+  --width: 90%;
+  --max-width: 500px;
+  --border-radius: 16px;
+  --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  z-index: 99999 !important;
+}
+
+.modal-wrapper {
+  z-index: 99999 !important;
+  position: relative;
+}
+
+ion-backdrop {
+  z-index: 99990 !important;
+}
+
+/* Estilos comuns para todas as páginas */
+.page-title {
+  font-weight: 700;
+  font-size: 28px;
+  color: var(--ion-color-dark);
+  margin-bottom: 8px;
+}
+
+.page-subtitle {
+  font-size: 16px;
+  color: var(--ion-color-medium);
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ion-color-dark);
+  margin-bottom: 12px;
+}
+
+/* Aprimoramentos para os cards em todo o app */
+ion-card {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Animações globais */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}

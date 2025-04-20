@@ -1,0 +1,76 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>
+      <span class="modal-title">{{ title }}</span>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <!-- Imagem de destaque -->
+  <div class="detail-image-container">
+    <img [src]="img" [alt]="title" (error)="handleImageError($event)">
+    
+    <!-- Ações rápidas sobre a imagem -->
+    <div class="image-actions">
+      <ion-button shape="round" fill="solid" size="small" color="light" class="action-button"
+                 (click)="toggleFavorite()" *ngIf="id">
+        <ion-icon [name]="isFavorite ? 'heart' : 'heart-outline'" 
+                  [color]="isFavorite ? 'favorite' : 'medium'">
+        </ion-icon>
+      </ion-button>
+      
+      <ion-button shape="round" fill="solid" size="small" color="light" class="action-button" 
+                 (click)="shareContent()" *ngIf="canShare">
+        <ion-icon name="share-social-outline"></ion-icon>
+      </ion-button>
+      
+      <ion-button shape="round" fill="solid" size="small" color="light" class="action-button"
+                 [href]="mapUrl" target="_blank" *ngIf="mapUrl">
+        <ion-icon name="map-outline"></ion-icon>
+      </ion-button>
+    </div>
+    
+    <!-- Badge de subtítulo/categoria -->
+    <div class="detail-badge" *ngIf="subtitle">
+      {{ subtitle }}
+    </div>
+  </div>
+
+  <!-- Conteúdo principal -->
+  <div class="detail-content animate-in">
+    <h1>{{ title }}</h1>
+    
+    <!-- Localização se aplicável -->
+    <div class="location-info" *ngIf="location">
+      <ion-icon name="location-outline"></ion-icon>
+      <span>{{ location }}</span>
+    </div>
+    
+    <!-- Descrição principal -->
+    <p class="detail-description">{{ description }}</p>
+    
+    <!-- Dados adicionais organizados em ícones -->
+    <div class="additional-info" *ngIf="extraInfo && extraInfo.length > 0">
+      <div class="info-item" *ngFor="let info of extraInfo">
+        <ion-icon [name]="info.icon || 'information-circle-outline'"></ion-icon>
+        <div class="info-content">
+          <div class="info-label">{{ info.label }}</div>
+          <div class="info-value">{{ info.value }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botão de ação principal -->
+  <div class="action-container" *ngIf="mainActionText">
+    <ion-button expand="block" (click)="onMainAction()">
+      {{ mainActionText }}
+    </ion-button>
+  </div>
+</ion-content>

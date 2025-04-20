@@ -1,0 +1,127 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>
+      <span class="modal-title">Configurações</span>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="dismiss()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="settings-container animate-in">
+    <!-- Seção de aparência -->
+    <ion-list-header>
+      <ion-label>Aparência</ion-label>
+    </ion-list-header>
+    
+    <ion-list lines="none">
+      <ion-item>
+        <ion-icon name="contrast-outline" slot="start" color="primary"></ion-icon>
+        <ion-label>
+          <h2>Tema</h2>
+          <p>Altere o modo de visualização do aplicativo</p>
+        </ion-label>
+      </ion-item>
+      
+      <div class="theme-options">
+        <ion-segment [value]="currentTheme" (ionChange)="onThemeChange($event)">
+          <ion-segment-button value="light">
+            <ion-label>Claro</ion-label>
+            <ion-icon name="sunny-outline"></ion-icon>
+          </ion-segment-button>
+          
+          <ion-segment-button value="dark">
+            <ion-label>Escuro</ion-label>
+            <ion-icon name="moon-outline"></ion-icon>
+          </ion-segment-button>
+          
+          <ion-segment-button value="system">
+            <ion-label>Sistema</ion-label>
+            <ion-icon name="settings-outline"></ion-icon>
+          </ion-segment-button>
+        </ion-segment>
+      </div>
+    </ion-list>
+    
+    <!-- Seção de notificações -->
+    <ion-list-header>
+      <ion-label>Notificações</ion-label>
+    </ion-list-header>
+    
+    <ion-list lines="none">
+      <ion-item>
+        <ion-icon name="notifications-outline" slot="start" color="primary"></ion-icon>
+        <ion-label>
+          <h2>Receber notificações</h2>
+          <p>Ser notificado sobre novas atualizações</p>
+        </ion-label>
+        <ion-toggle [(ngModel)]="notifications" color="primary"></ion-toggle>
+      </ion-item>
+      
+      <ion-item [disabled]="!notifications">
+        <ion-icon name="mail-outline" slot="start" color="primary"></ion-icon>
+        <ion-label>
+          <h2>Notificações por email</h2>
+          <p>Receber atualizações por email</p>
+        </ion-label>
+        <ion-toggle [(ngModel)]="emailNotifications" color="primary"></ion-toggle>
+      </ion-item>
+    </ion-list>
+    
+    <!-- Seção de privacidade -->
+    <ion-list-header>
+      <ion-label>Privacidade</ion-label>
+    </ion-list-header>
+    
+    <ion-list lines="none">
+      <ion-item>
+        <ion-icon name="analytics-outline" slot="start" color="primary"></ion-icon>
+        <ion-label>
+          <h2>Coleta de dados de uso</h2>
+          <p>Ajude a melhorar o aplicativo</p>
+        </ion-label>
+        <ion-toggle [(ngModel)]="analytics" color="primary"></ion-toggle>
+      </ion-item>
+      
+      <ion-item button detail="true" (click)="showPrivacyPolicy()">
+        <ion-icon name="document-text-outline" slot="start" color="primary"></ion-icon>
+        <ion-label>
+          <h2>Política de privacidade</h2>
+          <p>Saiba como seus dados são utilizados</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    
+    <!-- Seção de dados -->
+    <ion-list-header>
+      <ion-label>Dados da aplicação</ion-label>
+    </ion-list-header>
+    
+    <ion-list lines="none">
+      <ion-item button (click)="confirmClearFavorites()">
+        <ion-icon name="trash-outline" slot="start" color="danger"></ion-icon>
+        <ion-label>
+          <h2>Limpar favoritos</h2>
+          <p>Remover todos os itens favoritos</p>
+        </ion-label>
+      </ion-item>
+      
+      <ion-item button (click)="confirmClearData()">
+        <ion-icon name="refresh-outline" slot="start" color="danger"></ion-icon>
+        <ion-label>
+          <h2>Redefinir aplicativo</h2>
+          <p>Limpar todos os dados salvos</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <div class="version-info">
+    <p>Versão 1.0.0</p>
+    <p>Desenvolvido para a disciplina IHM</p>
+  </div>
+</ion-content>

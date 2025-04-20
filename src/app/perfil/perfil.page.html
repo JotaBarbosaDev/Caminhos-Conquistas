@@ -1,72 +1,219 @@
-<ion-header>
-  <ion-toolbar color="primary">
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary" class="header-toolbar">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/perfil"></ion-back-button>
     </ion-buttons>
     <ion-title>Perfil</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="editProfile()">
+        <ion-icon name="create-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content></ion-refresher-content>
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Puxe para atualizar" refreshingSpinner="circles"></ion-refresher-content>
   </ion-refresher>
 
-  <ion-card>
-    <ion-item lines="none">
-      <ion-avatar slot="start"><img src="assets/img/joao.jpg" /></ion-avatar>
-      <ion-label>
-        <h2>{{ name }}</h2>
-      </ion-label>
-    </ion-item>
-    <ion-item lines="none"><p class="ion-text-wrap">{{ bio }}</p></ion-item>
+  <!-- Cabeçalho do perfil -->
+  <div class="profile-header animate__animated animate__fadeIn">
+    <div class="profile-image-container">
+      <ion-avatar class="profile-avatar">
+        <img src="assets/images/joao.jpg" alt="Foto de Perfil" />
+      </ion-avatar>
+      <div class="status-badge online"></div>
+    </div>
+    
+    <div class="profile-info">
+      <h1 class="profile-name">{{ name }}</h1>
+      <p class="profile-location">
+        <ion-icon name="location-outline"></ion-icon>
+        {{ location }}
+      </p>
+      
+      <div class="profile-stats">
+        <div class="stat">
+          <span class="stat-number">{{ experiences.length }}</span>
+          <span class="stat-label">Experiências</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">{{ skills.length }}</span>
+          <span class="stat-label">Competências</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">{{ languages.length }}</span>
+          <span class="stat-label">Idiomas</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <ion-segment [(ngModel)]="segmentValue" color="primary">
-      <ion-segment-button value="about">
-        <ion-label>Sobre</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="exp">
-        <ion-label>Experiência</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-
-    <ng-container *ngIf="segmentValue === 'about'">
-      <ion-list>
-        <ion-item>
-          <ion-icon name="calendar-outline" slot="start"></ion-icon>
-          <ion-label>{{ birth }}</ion-label>
-        </ion-item>
-        <ion-item>
-          <ion-icon name="location-outline" slot="start"></ion-icon>
-          <ion-label>{{ location }}</ion-label>
-        </ion-item>
-      </ion-list>
-
-      <ion-list-header>
-        <ion-label>Competências</ion-label>
-      </ion-list-header>
-      <ion-badge *ngFor="let s of skills" color="primary" class="badge">
-        {{ s.name }}: {{ s.level }}
-      </ion-badge>
-
-      <ion-list-header style="margin-top:16px;">
-        <ion-label>Idiomas</ion-label>
-      </ion-list-header>
-      <ion-badge *ngFor="let l of languages" color="secondary" class="badge">
-        {{ l.name }}: {{ l.level }}
-      </ion-badge>
-    </ng-container>
-
-    <ng-container *ngIf="segmentValue === 'exp'">
-      <ion-list>
-        <ion-item *ngFor="let e of experiences">
-          <ion-icon [name]="e.icon" slot="start"></ion-icon>
-          <ion-label>
-            <h3>{{ e.role }}</h3>
-            <p>{{ e.company }} • {{ e.period }}</p>
-          </ion-label>
-        </ion-item>
-      </ion-list>
-    </ng-container>
+  <!-- Biografia -->
+  <ion-card class="bio-card animate__animated animate__fadeIn">
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon name="information-circle-outline"></ion-icon>
+        Biografia
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p class="bio-text">{{ bio }}</p>
+    </ion-card-content>
   </ion-card>
+
+  <!-- Segmentos para alternar entre seções -->
+  <ion-segment [(ngModel)]="segmentValue" 
+               (ionChange)="segmentChanged()" 
+               color="primary" 
+               mode="ios" 
+               class="custom-segment animate__animated animate__fadeIn">
+    <ion-segment-button value="about">
+      <ion-icon name="person-outline"></ion-icon>
+      <ion-label>Sobre</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="exp">
+      <ion-icon name="briefcase-outline"></ion-icon>
+      <ion-label>Experiência</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="edu">
+      <ion-icon name="school-outline"></ion-icon>
+      <ion-label>Educação</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <!-- Seção Sobre -->
+  <div *ngIf="segmentValue === 'about'" class="animate__animated animate__fadeIn">
+    <ion-card class="info-card">
+      <ion-card-header>
+        <ion-card-title>Informações Pessoais</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list lines="none">
+          <ion-item>
+            <ion-icon name="calendar-outline" color="medium" slot="start"></ion-icon>
+            <ion-label>
+              <p class="item-label">Nascimento</p>
+              <h2>{{ birth }}</h2>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-icon name="mail-outline" color="medium" slot="start"></ion-icon>
+            <ion-label>
+              <p class="item-label">Email</p>
+              <h2>joao.barbosa&#64;exemplo.com</h2>
+            </ion-label>
+          </ion-item>
+          <ion-item>
+            <ion-icon name="call-outline" color="medium" slot="start"></ion-icon>
+            <ion-label>
+              <p class="item-label">Telefone</p>
+              <h2>+351 912 345 678</h2>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Competências -->
+    <ion-card class="skills-card">
+      <ion-card-header>
+        <ion-card-title>Competências</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="skill-item" *ngFor="let s of skills">
+          <div class="skill-header">
+            <span class="skill-name">{{ s.name }}</span>
+            <span class="skill-level">{{ s.level }}</span>
+          </div>
+          <ion-progress-bar [value]="getSkillValue(s.level)" color="primary"></ion-progress-bar>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Idiomas -->
+    <ion-card class="languages-card">
+      <ion-card-header>
+        <ion-card-title>Idiomas</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="language-item" *ngFor="let l of languages">
+          <div class="language-flag" [ngClass]="'flag-' + getLanguageFlag(l.name)"></div>
+          <div class="language-info">
+            <span class="language-name">{{ l.name }}</span>
+            <div class="language-level">
+              <ion-badge color="tertiary">{{ l.level }}</ion-badge>
+            </div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <!-- Seção Experiência -->
+  <div *ngIf="segmentValue === 'exp'" class="animate__animated animate__fadeIn">
+    <ion-card class="experience-card" *ngFor="let e of experiences">
+      <ion-card-header>
+        <div class="exp-header">
+          <ion-avatar class="company-avatar">
+            <ion-icon [name]="e.icon" color="primary" size="large"></ion-icon>
+          </ion-avatar>
+          <div class="exp-title">
+            <ion-card-title>{{ e.role }}</ion-card-title>
+            <ion-card-subtitle>{{ e.company }}</ion-card-subtitle>
+          </div>
+        </div>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="exp-period">
+          <ion-icon name="time-outline"></ion-icon>
+          <span>{{ e.period }}</span>
+        </div>
+        <p class="exp-description">{{ e.description || 'Sem descrição disponível.' }}</p>
+        
+        <div class="exp-tags" *ngIf="e.tags">
+          <ion-badge *ngFor="let tag of e.tags" color="light" class="exp-tag">
+            {{ tag }}
+          </ion-badge>
+        </div>
+      </ion-card-content>
+    </ion-card>
+    
+    <div class="empty-state" *ngIf="experiences.length === 0">
+      <ion-icon name="briefcase-outline" size="large"></ion-icon>
+      <h3>Nenhuma experiência adicionada</h3>
+      <p>As experiências profissionais aparecerão aqui</p>
+    </div>
+  </div>
+  
+  <!-- Seção Educação -->
+  <div *ngIf="segmentValue === 'edu'" class="animate__animated animate__fadeIn">
+    <ion-card class="education-card" *ngFor="let edu of education">
+      <ion-card-header>
+        <div class="edu-header">
+          <ion-avatar class="institution-avatar">
+            <ion-icon name="school-outline" color="tertiary" size="large"></ion-icon>
+          </ion-avatar>
+          <div class="edu-title">
+            <ion-card-title>{{ edu.degree }}</ion-card-title>
+            <ion-card-subtitle>{{ edu.institution }}</ion-card-subtitle>
+          </div>
+        </div>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="edu-period">
+          <ion-icon name="time-outline"></ion-icon>
+          <span>{{ edu.period }}</span>
+        </div>
+        <p class="edu-description">{{ edu.description || 'Sem descrição disponível.' }}</p>
+      </ion-card-content>
+    </ion-card>
+    
+    <div class="empty-state" *ngIf="!education || education.length === 0">
+      <ion-icon name="school-outline" size="large"></ion-icon>
+      <h3>Nenhuma formação adicionada</h3>
+      <p>As informações educacionais aparecerão aqui</p>
+    </div>
+  </div>
 </ion-content>

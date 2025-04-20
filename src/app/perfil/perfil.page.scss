@@ -18,3 +18,393 @@
   height: 140px;
   object-fit: cover;
 }
+
+.header-toolbar {
+  --background: linear-gradient(135deg, var(--ion-color-primary), var(--ion-color-primary-shade));
+}
+
+// Cabeçalho do perfil
+.profile-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 20px;
+  
+  .profile-image-container {
+    position: relative;
+    margin-bottom: 16px;
+    
+    .profile-avatar {
+      width: 100px;
+      height: 100px;
+      margin: 0 auto;
+      border: 3px solid white;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+    
+    .status-badge {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 2px solid white;
+      
+      &.online {
+        background-color: #2dd36f;
+      }
+      
+      &.offline {
+        background-color: #eb445a;
+      }
+    }
+  }
+  
+  .profile-info {
+    width: 100%;
+    
+    .profile-name {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 5px;
+      color: var(--ion-color-dark);
+    }
+    
+    .profile-location {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--ion-color-medium);
+      margin-bottom: 16px;
+      
+      ion-icon {
+        margin-right: 5px;
+      }
+    }
+  }
+  
+  .profile-stats {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+    
+    .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      
+      .stat-number {
+        font-weight: 700;
+        font-size: 20px;
+        color: var(--ion-color-dark);
+      }
+      
+      .stat-label {
+        font-size: 12px;
+        color: var(--ion-color-medium);
+      }
+    }
+  }
+}
+
+// Card de biografia
+.bio-card {
+  margin-bottom: 20px;
+  
+  ion-card-title {
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    
+    ion-icon {
+      margin-right: 8px;
+    }
+  }
+  
+  .bio-text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ion-color-medium-shade);
+    margin: 0;
+  }
+}
+
+// Segmentos personalizados
+.custom-segment {
+  background: rgba(var(--ion-color-light-rgb), 0.3);
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 20px;
+  
+  ion-segment-button {
+    --color: var(--ion-color-medium);
+    --color-checked: var(--ion-color-primary);
+    --indicator-color: white;
+    
+    ion-icon {
+      margin-bottom: 4px;
+    }
+  }
+}
+
+// Informações pessoais
+.info-card {
+  margin-bottom: 16px;
+  
+  ion-card-title {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  .item-label {
+    font-size: 12px;
+    color: var(--ion-color-medium);
+    margin: 0;
+  }
+  
+  h2 {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--ion-color-dark);
+    margin: 4px 0 0 0;
+  }
+}
+
+// Competências
+.skills-card {
+  margin-bottom: 16px;
+  
+  .skill-item {
+    margin-bottom: 16px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    .skill-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      
+      .skill-name {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--ion-color-dark);
+      }
+      
+      .skill-level {
+        font-size: 14px;
+        color: var(--ion-color-primary);
+      }
+    }
+  }
+}
+
+// Idiomas
+.languages-card {
+  margin-bottom: 16px;
+  
+  .language-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+    
+    .language-flag {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      margin-right: 12px;
+      background-size: cover;
+      background-position: center;
+      
+      &.flag-pt {
+        background-image: url('/assets/img/flags/pt.svg');
+      }
+      
+      &.flag-en {
+        background-image: url('/assets/img/flags/en.svg');
+      }
+      
+      &.flag-es {
+        background-image: url('/assets/img/flags/es.svg');
+      }
+      
+      &.flag-fr {
+        background-image: url('/assets/img/flags/fr.svg');
+      }
+    }
+    
+    .language-info {
+      flex: 1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      
+      .language-name {
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--ion-color-dark);
+      }
+    }
+  }
+}
+
+// Experiência
+.experience-card {
+  margin-bottom: 16px;
+  
+  .exp-header {
+    display: flex;
+    align-items: center;
+    
+    .company-avatar {
+      width: 48px;
+      height: 48px;
+      margin-right: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--ion-color-light);
+    }
+    
+    .exp-title {
+      ion-card-title {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      
+      ion-card-subtitle {
+        font-size: 14px;
+        color: var(--ion-color-medium);
+      }
+    }
+  }
+  
+  .exp-period {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    color: var(--ion-color-medium);
+    font-size: 13px;
+    
+    ion-icon {
+      margin-right: 6px;
+    }
+  }
+  
+  .exp-description {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ion-color-medium-shade);
+    margin-bottom: 12px;
+  }
+  
+  .exp-tags {
+    display: flex;
+    flex-wrap: wrap;
+    
+    .exp-tag {
+      margin: 0 6px 6px 0;
+      padding: 4px 8px;
+      border-radius: 16px;
+      font-size: 12px;
+    }
+  }
+}
+
+// Educação
+.education-card {
+  margin-bottom: 16px;
+  
+  .edu-header {
+    display: flex;
+    align-items: center;
+    
+    .institution-avatar {
+      width: 48px;
+      height: 48px;
+      margin-right: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--ion-color-light);
+    }
+    
+    .edu-title {
+      ion-card-title {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 4px;
+      }
+      
+      ion-card-subtitle {
+        font-size: 14px;
+        color: var(--ion-color-medium);
+      }
+    }
+  }
+  
+  .edu-period {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    color: var(--ion-color-medium);
+    font-size: 13px;
+    
+    ion-icon {
+      margin-right: 6px;
+    }
+  }
+  
+  .edu-description {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ion-color-medium-shade);
+  }
+}
+
+// Estado vazio
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+  
+  ion-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    color: var(--ion-color-medium);
+    opacity: 0.7;
+  }
+  
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ion-color-dark);
+    margin-bottom: 8px;
+  }
+  
+  p {
+    font-size: 14px;
+    color: var(--ion-color-medium);
+    margin: 0;
+  }
+}

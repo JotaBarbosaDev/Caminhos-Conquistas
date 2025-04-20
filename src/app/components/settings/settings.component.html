@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Configurações</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="closeModal()">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="settings-container">
+    <ion-list>
+      <ion-list-header>
+        <ion-label>Aparência</ion-label>
+      </ion-list-header>
+      
+      <ion-item>
+        <ion-label>Tema</ion-label>
+        <ion-select [(ngModel)]="themeMode" (ionChange)="changeTheme($event)" interface="popover">
+          <ion-select-option value="light">Claro</ion-select-option>
+          <ion-select-option value="dark">Escuro</ion-select-option>
+          <ion-select-option value="system">Sistema</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+    
+    <ion-list>
+      <ion-list-header>
+        <ion-label>Dados</ion-label>
+      </ion-list-header>
+      
+      <ion-item button (click)="clearAllFavorites()" class="danger-item">
+        <ion-icon name="trash-outline" slot="start" color="danger"></ion-icon>
+        <ion-label>Limpar todos os favoritos</ion-label>
+      </ion-item>
+    </ion-list>
+    
+    <div class="about-section">
+      <h4>Sobre o aplicativo</h4>
+      <p>Portfólio IHM - Versão 1.0</p>
+      <p>© 2025 - Desenvolvido como demonstração de Interface Humano-Máquina</p>
+    </div>
+  </div>
+</ion-content>

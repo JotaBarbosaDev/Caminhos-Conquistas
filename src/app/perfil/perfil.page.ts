@@ -10,10 +10,18 @@ interface Experience {
   company: string;
   period: string;
   icon: string;
+  description?: string;
+  tags?: string[];
 }
 interface Language {
   name: string;
   level: string;
+}
+interface Education {
+  degree: string;
+  institution: string;
+  period: string;
+  description?: string;
 }
 
 @Component({
@@ -49,18 +57,65 @@ export class PerfilPage {
       company: "JHB Internacional",
       period: "2020–2022",
       icon: "briefcase-outline",
+      description: "Gestão de equipas e projetos internacionais.",
+      tags: ["Gestão", "Logística", "Liderança"]
     },
     {
       role: "Responsável de Obra",
       company: "Navios Cruzeiro",
       period: "2022–2024",
       icon: "boat-outline",
+      description: "Supervisão de obras e renovações em navios de cruzeiro.",
+      tags: ["Construção", "Supervisão", "Marítimo"]
     },
+  ];
+
+  education: Education[] = [
+    {
+      degree: "Mestrado em Engenharia Informática",
+      institution: "Universidade do Minho",
+      period: "2018-2020",
+      description: "Especialização em Interfaces Homem-Máquina e Design de Interação."
+    },
+    {
+      degree: "Licenciatura em Engenharia Informática",
+      institution: "Instituto Politécnico de Viana do Castelo",
+      period: "2015-2018",
+      description: "Foco em desenvolvimento de software e sistemas web."
+    }
   ];
 
   doRefresh(event: RefresherCustomEvent) {
     setTimeout(() => {
       event.target.complete();
     }, 1000);
+  }
+
+  editProfile() {
+    console.log('Editar perfil');
+    // Lógica para editar perfil será implementada aqui
+  }
+
+  segmentChanged() {
+    console.log('Segmento alterado para:', this.segmentValue);
+  }
+
+  getSkillValue(level: string): number {
+    switch (level) {
+      case 'Básico': return 0.3;
+      case 'Intermédio': return 0.6;
+      case 'Avançado': return 0.85;
+      case 'Especialista': return 1;
+      default: return 0.5;
+    }
+  }
+
+  getLanguageFlag(language: string): string {
+    switch (language) {
+      case 'Português': return 'pt';
+      case 'Inglês': return 'en';
+      case 'Espanhol': return 'es';
+      default: return 'unknown';
+    }
   }
 }

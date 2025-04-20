@@ -1,25 +1,105 @@
-<ion-header>
-  <ion-toolbar color="primary">
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary" class="header-toolbar">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/explorar"></ion-back-button>
     </ion-buttons>
     <ion-title>Explorar</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleView()">
+        <ion-icon [name]="viewType === 'grid' ? 'list-outline' : 'grid-outline'"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content></ion-refresher-content>
+    <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Puxe para atualizar" refreshingSpinner="circles"></ion-refresher-content>
   </ion-refresher>
 
-  <h3>Atividades e Eventos</h3>
-  <div class="horizontal-scroll">
-    <ion-card *ngFor="let e of events" (click)="openDetails(e)">
-      <img src="assets/img/{{ e.img }}" alt="{{ e.title }}" />
+  <div class="intro-section animate__animated animate__fadeIn">
+    <h1 class="page-title">Atividades e Eventos</h1>
+    <p class="page-subtitle">Descubra o que está acontecendo na região</p>
+  </div>
+
+  <!-- Barra de pesquisa -->
+  <ion-searchbar placeholder="Pesquisar eventos..." 
+                 [(ngModel)]="searchTerm" 
+                 (ionChange)="filterEvents()"
+                 animated="true"
+                 class="custom-searchbar animate__animated animate__fadeIn">
+  </ion-searchbar>
+
+  <!-- Filtros de categoria -->
+  <ion-segment [(ngModel)]="selectedCategory" 
+              (ionChange)="filterEvents()" 
+              scrollable="true" 
+              class="category-segment animate__animated animate__fadeIn">
+    <ion-segment-button value="all">
+      <ion-label>Todos</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="cultural">
+      <ion-label>Cultural</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="desporto">
+      <ion-label>Desporto</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="gastronomia">
+      <ion-label>Gastronomia</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <!-- Visualização em grade -->
+  <div class="events-grid" *ngIf="viewType === 'grid' && filteredEvents.length > 0">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="6" size-md="4" size-lg="3" *ngFor="let e of filteredEvents">
+          <ion-card (click)="openDetails(e)" class="event-card animate__animated animate__fadeIn">
+            <div class="img-container">
+              <img src="assets/images/{{ e.img }}" alt="{{ e.title }}" />
+              <div class="event-date">
+                <strong>{{ formatEventDate(e.date) }}</strong>
+              </div>
+            </div>
+            <ion-card-header>
+              <ion-card-title>{{ e.title }}</ion-card-title>
+              <ion-card-subtitle>
+                <ion-icon name="location-outline" class="location-icon"></ion-icon>
+                {{ e.location }}
+              </ion-card-subtitle>
+            </ion-card-header>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+  <!-- Visualização em horizontal scroll -->
+  <div class="horizontal-scroll" *ngIf="viewType === 'list' && filteredEvents.length > 0">
+    <ion-card *ngFor="let e of filteredEvents" (click)="openDetails(e)" class="event-card animate__animated animate__fadeIn">
+      <div class="img-container">
+        <img src="assets/images/{{ e.img }}" alt="{{ e.title }}" />
+        <div class="event-date">
+          <strong>{{ formatEventDate(e.date) }}</strong>
+        </div>
+      </div>
       <ion-card-header>
         <ion-card-title>{{ e.title }}</ion-card-title>
-        <ion-card-subtitle>{{ e.location }} • {{ e.date }}</ion-card-subtitle>
+        <ion-card-subtitle>
+          <ion-icon name="location-outline" class="location-icon"></ion-icon>
+          {{ e.location }}
+        </ion-card-subtitle>
       </ion-card-header>
     </ion-card>
+  </div>
+
+  <!-- Estado vazio -->
+  <div class="empty-state" *ngIf="filteredEvents.length === 0">
+    <ion-icon name="calendar-outline" size="large"></ion-icon>
+    <h3>Nenhum evento encontrado</h3>
+    <p>Tente mudar os filtros ou buscar outro termo</p>
+    <ion-button (click)="resetFilters()" fill="outline">
+      Limpar filtros
+    </ion-button>
   </div>
 </ion-content>
