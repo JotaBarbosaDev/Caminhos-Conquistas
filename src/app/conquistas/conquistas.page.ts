@@ -53,12 +53,12 @@ export class ConquistasPage implements OnInit {
       date: "2021"
     },
     {
-      title: "Estrasburgo, França",
-      subtitle: "2022",
-      img: "strasbourg.jpg",
-      description: "Centro europeu com canais e catedral gótica.",
+      title: "Bremerhaven, Holanda",
+      subtitle: "2019",
+      img: "Bremerhaven.jpeg",
+      description: "Porto histórico com museus marítimos.",
       type: "viagem",
-      date: "2022"
+      date: "2019"
     },
   ];
   cursos: Achievement[] = [
