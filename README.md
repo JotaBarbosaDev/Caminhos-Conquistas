@@ -1,98 +1,193 @@
-# 🌍 Apresentação da Minha Terra - Freixo, Ponte de Lima
+# 📱 PortfolioIHM
 
-Aplicação móvel desenvolvida com Ionic para a disciplina de Interação Homem-Máquina (IHM) no Instituto Politécnico de Viana do Castelo.  
-Esta app apresenta a minha localidade de origem, Freixo, no concelho de Ponte de Lima, destacando pontos turísticos, gastronomia, personalidades e muito mais.
-
-![Estado](https://img.shields.io/badge/estado-em%20desenvolvimento-green)
 ![Versão](https://img.shields.io/badge/versão-1.0.0-blue)
-![Compatibilidade](https://img.shields.io/badge/compatibilidade-Android%20%7C%20iOS-blue)
+![Status](https://img.shields.io/badge/status-em%20desenvolvimento-orange)
+![Plataforma](https://img.shields.io/badge/plataforma-iOS%20%7C%20Android-lightgrey)
+![Framework](https://img.shields.io/badge/framework-Ionic%20%7C%20Angular-blue)
+![Licença](https://img.shields.io/badge/licença-MIT-green)
 
-## 📱 Compatibilidade
+**PortfolioIHM** é uma aplicação móvel desenvolvida com Ionic e Angular que apresenta um portfolio pessoal interativo. Criada como projeto da cadeira de Interação Homem-Máquina, esta aplicação demonstra um design responsivo em dispositivos móveis.
+Com ele é possível ver as minhas informações pessoais, conquistas, gostos e explorar a terra natal de forma intuitiva e envolvente.
 
-- ✅ Android  
-- ✅ iOS  
-- ✅ Tablets  
+<div align="center">
+  <img src="screenshots/app-showcase.png" alt="PortfolioIHM Showcase" width="800px">
+</div>
 
-> Nota: A aplicação é executada localmente (localhost) para fins de avaliação académica e não está disponível online.
+## 📋 Índice
 
-## 🎯 Objetivo
+- [Características](#-características)
+- [Screenshots](#-screenshots)
+- [Instalação](#-instalação)
+- [Tecnologias](#-tecnologias)
+- [Estrutura do Projeto](#-estrutura-do-projeto)
+- [Funcionalidades](#-funcionalidades)
+- [Contribuição](#-contribuição)
+- [Licença](#-licença)
+- [Contato](#-contato)
 
-Desenvolver uma aplicação móvel que apresente a minha localidade de nascimento, integrando informações pessoais e culturais, utilizando a framework Ionic.
+## ✨ Características
 
-## 👤 Sobre Mim
+- **Design Intuitivo**: Interface de utilizador moderna e responsiva
+- **Navegação por Tabs**: Acesso rápido às diferentes seções do portfolio
+- **Animações Fluidas**: Transições suaves entre componentes
+- **Modo Offline**: Funcionalidades principais disponíveis sem conexão à internet
+- **Design Adaptativo**: Layout otimizado para diferentes tamanhos de ecrã
 
-- **Nome:** João Barbosa
-- **Curso:** Engenharia Informática  
-- **Instituição:** Instituto Politécnico de Viana do Castelo  
-- **Objetivos:** Desenvolver competências em desenvolvimento móvel e design de interfaces  
-- **Interesses:** Exercício físico, tecnologia e cultura local  
+## 📸 Screenshots
 
-## 🗺️ Sobre Freixo, Ponte de Lima
+### Página de Perfil
 
-- **Localidade:** Freixo  
-- **Concelho:** Ponte de Lima  
-- **Distrito:** Viana do Castelo  
+<div align="center">
+  <img src="screenshots/perfil-about.png" alt="Perfil - About" width="250px">
+  <img src="screenshots/perfil-exp.png" alt="Perfil - Experiência" width="250px">
+  <img src="screenshots/perfil-edu.png" alt="Perfil - Educação" width="250px">
+</div>
 
-### 📌 Pontos de Interesse
+A página de perfil oferece uma visão completa das informações pessoais e profissionais, organizada em três seções principais através de um segmento de navegação:
+- **Sobre**: Dados pessoais, competências e idiomas
+- **Experiência**: Histórico profissional detalhado
+- **Educação**: Formação acadêmica e certificações
 
-- Igreja Paroquial de Freixo  
-- Paisagens naturais e trilhos pedestres  
-- Eventos culturais locais  
+### Página de Conquistas
 
-### 🍽️ Gastronomia
+<div align="center">
+  <img src="screenshots/conquistas-cards.png" alt="Conquistas - Cards" width="250px">
+  <img src="screenshots/conquistas-grid.png" alt="Conquistas - Grade" width="250px">
+  <img src="screenshots/conquistas-detail.png" alt="Detalhe da Conquista" width="250px">
+</div>
 
-- Arroz de Sarrabulho  
-- Lampreia à moda do Minho  
-- Vinho Verde  
+A seção de conquistas permite visualizar viagens e cursos concluídos, com:
+- Alternância entre visualizações em cards ou grid
+- Filtros para categorias específicas (viagens/cursos)
+- Modal detalhado ao clicar em cada item
 
-### 🧑‍🎤 Personalidades Locais
+### Página Terra Natal
 
-- Mickael Akordeon
+<div align="center">
+  <img src="screenshots/terra-mapa.png" alt="Terra - Mapa" width="250px">
+  <img src="screenshots/terra-pontos.png" alt="Terra - Pontos de Interesse" width="250px">
+</div>
 
-### ℹ️ Informações Úteis
+Exibição interativa da terra natal com:
+- Mapa da região com marcadores importantes
+- Lista de pontos de interesse por localidade
+- Informações detalhadas sobre atrações locais
 
-- **Área:** [Área em km²]  
-- **População:** [Número de habitantes]  
-- **Serviços:** [Informações sobre serviços locais]
+### Página de Gostos
 
-### 🏨 Alojamento
+<div align="center">
+  <img src="screenshots/gostos-gastronomia.png" alt="Gostos - Gastronomia" width="250px">
+  <img src="screenshots/gostos-desporto.png" alt="Gostos - Desporto" width="250px">
+</div>
 
-- Residencial São Cristovão  
-- Laranjalimão Guest House
+Apresentação de preferências pessoais organizadas por categorias:
+- Convívio
+- Gastronomia
+- Desporto
 
-### ⚽ Clubes Desportivos
+### Página Explorar
 
-- Grupo Desportivo de Freixo
-- Grupo Desportivo Vitorino de Peães
+<div align="center">
+  <img src="screenshots/explorar-eventos.png" alt="Explorar - Eventos" width="250px">
+  <img src="screenshots/explorar-filtro.png" alt="Explorar - Filtro" width="250px">
+</div>
 
-## 🌟 Funcionalidades da App
+Descoberta de eventos e atividades regionais:
+- Filtros por categoria
+- Alternância entre visualizações
+- Detalhes de cada evento
 
-- **Introdução Pessoal:** Apresentação do utilizador  
-- **Apresentação da Localidade:** Informações sobre Freixo, Ponte de Lima  
-- **Galeria de Imagens:** Fotos de pontos turísticos e eventos  
-- **Mapa Interativo:** Localização de pontos de interesse  
+## 🚀 Instalação
 
-## 🖼️ Protótipos de Baixa-Fidelidade (PBF)
+```bash
+# Clone o repositório
+git clone https://github.com/JotaBarbosaDev/PortfolioIHM
 
-Os protótipos foram desenhados para planear a estrutura e navegação da aplicação, garantindo uma experiência de utilizador intuitiva.
+# Entre no diretório
+cd PortfolioIHM
 
-## 🎨 Design e Usabilidade
+# Instale as dependências
+npm install
 
-- **Cor Predominante Personalizada:** Utilização de uma paleta de cores distinta das fornecidas pelo Ionic  
-- **Componentes do Ionic:** Utilização de ícones e componentes nativos para uma interface consistente  
-- **Navegação:** Implementação de rotas e tabs para facilitar a navegação entre os ecrãs  
+# Execute o projeto localmente
+ionic serve
 
-## 💾 Armazenamento de Dados
+# Para gerar APK/IPA
+ionic capacitor build android
+# ou
+ionic capacitor build ios
+```
 
-- **Ionic Storage:** Utilizado para armazenamento local de dados  
-- **PostgreSQL:** Planeado para futuras implementações de backend e sincronização de dados  
+## 💻 Tecnologias
 
-## 🚀 Possíveis Melhorias Futuras
+- **Ionic Framework 7**: Interface mobile responsiva
+- **Angular 16**: Framework front-end
+- **TypeScript**: Linguagem de programação
+- **Capacitor**: Builds nativas para iOS e Android
+- **SCSS**: Estilização avançada
+- **Animate.css**: Biblioteca de animações
 
-- Implementação de backend com PostgreSQL para sincronização de dados  
-- Adição de funcionalidades interativas, como comentários e avaliações  
-- Integração de notificações para eventos locais  
+## 📁 Estrutura do Projeto
 
-## 📜 Licença
+```
+src/
+├── app/
+│   ├── components/         # Componentes reutilizáveis
+│   ├── conquistas/         # Página de conquistas
+│   ├── explorar/           # Página de exploração
+│   ├── gostos/             # Página de gostos
+│   ├── perfil/             # Página de perfil
+│   ├── terra/              # Página sobre terra natal
+│   └── tabs/               # Navegação principal
+├── assets/
+│   ├── icon/               # Ícones do aplicativo
+│   └── images/             # Imagens utilizadas
+└── theme/                  # Variáveis e temas
+```
 
-Este projeto é desenvolvido exclusivamente para fins académicos no âmbito da disciplina de Interação Homem-Máquina.
+## 🔍 Funcionalidades
+
+### Perfil Pessoal Interativo
+- Visualização segmentada de informações
+- Progress bars para as competências
+- Bandeiras para idiomas
+
+### Sistema de Conquistas
+- Organização de conquistas pessoais e profissionais
+- Indicadores visuais de progresso para cursos
+
+### Exploração Regional
+- Mapa interativo da terra natal
+- Pontos de interesse categorizados
+
+### Personalização de Gostos
+- Interface organizada por categorias
+- Cards para cada preferência
+
+## 🤝 Contribuição
+
+Contribuições são bem-vindas! Para contribuir:
+
+1. Faça um Fork do projeto
+2. Crie sua Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a Branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
+## 📄 Licença
+
+Distribuído sob a licença MIT. Veja `LICENSE` para mais informações.
+
+## 📬 Contato
+
+### Email João Barbosa:
+- Pessoal: jotambbarbosa@gmail.com
+- Acadêmico: joao.barbosa@estg.pt
+
+Link do projeto: [https://github.com/JotaBarbosaDev/PortfolioIHM](https://github.com/JotaBarbosaDev/PortfolioIHM)
+
+---
+
+<div align="center">
+  <sub>Desenvolvido com ❤️ por João Barbosa</sub>
+</div>
