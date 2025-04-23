@@ -1,9 +1,9 @@
 import {Component, OnInit} from "@angular/core";
 import {ToastController, RefresherCustomEvent} from "@ionic/angular";
-import {ModalController} from "@ionic/angular";
-import {DetailModalComponent} from "src/app/components/detail-modal/detail-modal.component";
+import {ModalService} from "../services/modal.service";
 
 interface Event {
+  id?: string;
   title: string;
   location: string;
   date: string;
@@ -11,6 +11,11 @@ interface Event {
   details: string;
   description?: string; 
   category?: string;
+  rating?: number;
+  hours?: string;
+  price?: string;
+  actionText?: string;
+  mapUrl?: string;
 }
 @Component({
   selector: "app-explorar",
@@ -67,12 +72,24 @@ export class ExplorarPage implements OnInit {
   searchTerm: string = '';
   selectedCategory: string = 'all';
   filteredEvents: Event[] = [];
+  favorites: string[] = [];
 
-  constructor(private modalController: ModalController, private toastController: ToastController) {}
+  constructor(private modalService: ModalService, private toastController: ToastController) {}
   
   ngOnInit() {
     // Inicializa a lista filtrada com todos os eventos
     this.filteredEvents = [...this.events];
+    
+    // Carregar favoritos salvos no localStorage
+    try {
+      const savedFavorites = localStorage.getItem('favorites');
+      if (savedFavorites) {
+        this.favorites = JSON.parse(savedFavorites);
+      }
+    } catch (e) {
+      console.error('Erro ao carregar favoritos:', e);
+      this.favorites = [];
+    }
   }
 
   // Alterna entre visualização em grade e lista
@@ -108,18 +125,103 @@ export class ExplorarPage implements OnInit {
     return date;
   }
 
-  async openDetails(item: any) {
-    const modal = await this.modalController.create({
-      component: DetailModalComponent,
-      componentProps: {
-        title: item.title,
-        img: `assets/images/${item.img}`,
-        description: item.description,
-      },
+  async openDetails(item: Event) {
+    // Usar o título como ID se não existir um ID específico
+    const itemId = item.id || item.title;
+    
+    // Preparar informações extras
+    const extraInfo = [];
+    
+    // Adicionar categoria se disponível
+    if (item.category) {
+      extraInfo.push({
+        icon: 'pricetag-outline',
+        label: 'Categoria',
+        value: item.category
+      });
+    }
+    
+    // Adicionar data
+    extraInfo.push({
+      icon: 'calendar-outline',
+      label: 'Data',
+      value: item.date
     });
-    await modal.present();
+    
+    // Adicionar avaliação se disponível
+    if (item.rating) {
+      extraInfo.push({
+        icon: 'star-outline',
+        label: 'Avaliação',
+        value: `${item.rating}/5`
+      });
+    }
+    
+    // Adicionar horário se disponível
+    if (item.hours) {
+      extraInfo.push({
+        icon: 'time-outline',
+        label: 'Horário',
+        value: item.hours
+      });
+    }
+    
+    // Adicionar preço se disponível
+    if (item.price) {
+      extraInfo.push({
+        icon: 'cash-outline',
+        label: 'Preço médio',
+        value: item.price
+      });
+    }
+    
+    // Usar o serviço de modal para abrir o modal de detalhes
+    const { data } = await this.modalService.openDetailModal({
+      id: itemId,
+      title: item.title,
+      subtitle: item.category || 'Evento',
+      img: item.img,
+      description: item.description || item.details,
+      location: item.location,
+      mapUrl: item.mapUrl,
+      extraInfo: extraInfo,
+      mainActionText: item.actionText || 'Ver localização',
+      isFavorite: this.isFavorite(itemId),
+      favorite: this.isFavorite(itemId),
+      onToggleFavorite: () => this.toggleFavorite(itemId)
+    });
+    
+    // Atualizar favoritos se necessário
+    if (data && data.favoriteChanged) {
+      this.toggleFavorite(itemId);
+      
+      // Mostrar uma mensagem ao usuário
+      const toast = await this.toastController.create({
+        message: this.isFavorite(itemId) ? 'Adicionado aos favoritos' : 'Removido dos favoritos',
+        duration: 2000,
+        position: 'bottom'
+      });
+      
+      await toast.present();
+    }
   }
-
+  
+  isFavorite(id: string): boolean {
+    return this.favorites.includes(id);
+  }
+  
+  toggleFavorite(id: string) {
+    const index = this.favorites.indexOf(id);
+    if (index >= 0) {
+      this.favorites.splice(index, 1);
+    } else {
+      this.favorites.push(id);
+    }
+    
+    // Atualizar o armazenamento local de favoritos
+    localStorage.setItem('favorites', JSON.stringify(this.favorites));
+  }
+  
   doRefresh(event: RefresherCustomEvent) {
     setTimeout(() => {
       event.target.complete();

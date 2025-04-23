@@ -1,15 +1,17 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {AlertController, IonContent, RefresherCustomEvent, ToastController} from "@ionic/angular";
-import {ModalController} from "@ionic/angular";
-import {DetailModalComponent} from "src/app/components/detail-modal/detail-modal.component";
+import {ModalService} from "src/app/services/modal.service";
 import {AnimationController} from "@ionic/angular";
 
 interface Item {
+  id?: string;
   title: string;
   subtitle: string;
   img: string;
   description: string;
   favorite?: boolean;
+  location?: string;
+  extraInfo?: Array<{icon: string; label: string; value: string}>;
 }
 
 @Component({
@@ -96,7 +98,7 @@ export class GostosPage implements OnInit {
   ];
 
   constructor(
-    private modalController: ModalController,
+    private modalService: ModalService,
     private toastController: ToastController,
     private alertController: AlertController,
     private animationCtrl: AnimationController
@@ -119,46 +121,71 @@ export class GostosPage implements OnInit {
   }
 
   async openDetails(item: Item) {
-    const enterAnimation = (baseEl: any) => {
-      const backdropAnimation = this.animationCtrl.create()
-        .addElement(baseEl.querySelector('ion-backdrop'))
-        .fromTo('opacity', '0.01', 'var(--backdrop-opacity)');
-
-      const wrapperAnimation = this.animationCtrl.create()
-        .addElement(baseEl.querySelector('.modal-wrapper'))
-        .keyframes([
-          { offset: 0, opacity: '0', transform: 'scale(0.8)' },
-          { offset: 1, opacity: '1', transform: 'scale(1)' }
-        ]);
-
-      return this.animationCtrl.create()
-        .addElement(baseEl)
-        .easing('ease-out')
-        .duration(250)
-        .addAnimation([backdropAnimation, wrapperAnimation]);
-    };
-
-    const leaveAnimation = (baseEl: any) => {
-      return enterAnimation(baseEl).direction('reverse');
-    };
+    const itemId = item.id || item.title;
     
-    const modal = await this.modalController.create({
-      component: DetailModalComponent,
-      componentProps: {
-        title: item.title,
-        img: `assets/images/${item.img}`,
-        description: item.description,
-        favorite: item.favorite,
-        onToggleFavorite: () => this.toggleFavorite(item)
-      },
-      enterAnimation,
-      leaveAnimation
+    // Criar informações extras para o modal baseado na categoria
+    let extraInfo = [];
+    const category = this.selectedCategory;
+    
+    if (category === "gastr") {
+      extraInfo = [
+        {
+          icon: 'restaurant-outline',
+          label: 'Categoria',
+          value: 'Gastronomia'
+        },
+        {
+          icon: 'flag-outline',
+          label: 'Tipo',
+          value: item.subtitle
+        }
+      ];
+    } else if (category === "desp") {
+      extraInfo = [
+        {
+          icon: 'fitness-outline',
+          label: 'Categoria',
+          value: 'Desporto'
+        },
+        {
+          icon: 'location-outline', 
+          label: 'Local',
+          value: item.subtitle
+        }
+      ];
+    } else { // convívio
+      extraInfo = [
+        {
+          icon: 'people-outline',
+          label: 'Categoria',
+          value: 'Convívio'
+        },
+        {
+          icon: 'information-circle-outline',
+          label: 'Tipo',
+          value: item.subtitle
+        }
+      ];
+    }
+    
+    // Usar o serviço de modal para abrir o modal de detalhes
+    const { data } = await this.modalService.openDetailModal({
+      id: itemId,
+      title: item.title,
+      subtitle: item.subtitle || 'Interesse',
+      img: item.img,
+      description: item.description,
+      location: item.location,
+      extraInfo: item.extraInfo || extraInfo,
+      isFavorite: item.favorite,
+      favorite: item.favorite,
+      mainActionText: 'Mais informações',
+      onToggleFavorite: () => this.toggleFavorite(item)
     });
     
-    await modal.present();
-    
-    const { data } = await modal.onWillDismiss();
+    // Processar dados quando o modal fechar
     if (data && data.favoriteChanged) {
+      this.toggleFavorite(item);
       this.saveFavorites();
     }
   }

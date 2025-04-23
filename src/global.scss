@@ -62,6 +62,51 @@ ion-backdrop {
   z-index: 99990 !important;
 }
 
+/* Estilos específicos para os modais de detalhes */
+.detail-modal {
+  --backdrop-opacity: 0.7;
+  --border-radius: 16px;
+  
+  .modal-wrapper {
+    border-radius: 16px;
+    box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+  }
+  
+  ion-header {
+    box-shadow: none !important;
+  }
+  
+  ion-content {
+    --background: #ffffff;
+  }
+  
+  /* Garante que todos os elementos do modal sejam exibidos */
+  .image-actions {
+    z-index: 999 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+  }
+  
+  .detail-image-container {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  
+  .detail-badge {
+    z-index: 999 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  
+  .detail-content {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+}
+
 /* Estilos comuns para todas as páginas */
 .page-title {
   font-weight: 700;

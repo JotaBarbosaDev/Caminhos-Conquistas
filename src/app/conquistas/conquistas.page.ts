@@ -1,6 +1,7 @@
 import {Component, OnInit} from "@angular/core";
-import {ModalController, RefresherCustomEvent} from "@ionic/angular";
+import {RefresherCustomEvent} from "@ionic/angular";
 import {DetailModalComponent} from "src/app/components/detail-modal/detail-modal.component";
+import {ModalService} from "../services/modal.service";
 
 interface Achievement {
   title: string;
@@ -38,60 +39,273 @@ export class ConquistasPage implements OnInit {
     },
     {
       title: "Pula, Croácia",
-      subtitle: "2020",
+      subtitle: "2019",
       img: "pula.avif",
       description: "Famosa arena romana que ainda recebe eventos.",
+      type: "viagem",
+      date: "2019"
+    },
+    {
+      title: "Barcelona, Espanha",
+      subtitle: "2019",
+      img: "Barcelona.webp",
+      description: "Capital catalã vibrante, arte de Gaudí e praias.",
+      type: "viagem",
+      date: "2019"
+    },
+    {
+      title: "Bremerhaven, Alemanha",
+      subtitle: "2020",
+      img: "Bremerhaven.jpeg",
+      description: "Porto histórico com museus marítimos.",
       type: "viagem",
       date: "2020"
     },
     {
-      title: "Barcelona, Espanha",
-      subtitle: "2021",
-      img: "Barcelona.webp",
-      description: "Capital catalã vibrante, arte de Gaudí e praias.",
-      type: "viagem",
-      date: "2021"
-    },
-    {
-      title: "Bremerhaven, Holanda",
+      title: "Brendola, Itália",
       subtitle: "2019",
-      img: "Bremerhaven.jpeg",
-      description: "Porto histórico com museus marítimos.",
+      img: "Brendola.webp",
+      description: "Cidade pitoresca com arquitetura renascentista.",
       type: "viagem",
       date: "2019"
+    },
+    {
+      title: "De Pinte, Bélgica",
+      subtitle: "2022",
+      img: "dePinte.png",
+      description: "Cidade encantadora com canais e arquitetura medieval.",
+      type: "viagem",
+      date: "2022"
+    },
+    {
+      title: "Genebra, Suíça",
+      subtitle: "2024",
+      img: "Genebra.png",
+      description: "Cidade internacional com o Lago de Genebra.",
+      type: "viagem",
+      date: "2024"
+    },
+    {
+      title: "Golling An Der Salzach, Áustria",
+      subtitle: "2019",
+      img: "GollingAnDerSalzach.webp",
+      description: "Pitoresca cidade com montanhas e cascatas.",
+      type: "viagem",
+      date: "2019"
+    },
+    {
+      title: "Malaga, Espanha",
+      subtitle: "2018",
+      img: "Malaga.jpg",
+      description: "Praias ensolaradas e rica herança cultural.",
+      type: "viagem",
+      date: "2018"
+    },
+    {
+      title: "Meerkerke, Bélgica",
+      subtitle: "2022",
+      img: "meerkerk.jpg",
+      description: "Cidade encantadora com canais e arquitetura medieval.",
+      type: "viagem",
+      date: "2022"
+    },
+    {
+      title: "Mèze, França",
+      subtitle: "2022",
+      img: "Meze.jpg",
+      description: "Cidade costeira com praias e gastronomia.",
+      type: "viagem",
+      date: "2022"
+    },
+    {
+      title: "Papenburg, Alemanha",
+      subtitle: "2022",
+      img: "papenburg.jpg",
+      description: "Famosa por seus estaleiros e arquitetura histórica.",
+      type: "viagem",
+      date: "2022"
+    },
+    {
+      title: "Paris, França",
+      subtitle: "2023",
+      img: "Paris.jpg",
+      description: "Cidade do amor, arte e cultura.",
+      type: "viagem",
+      date: "2023"
+    },
+    {
+      title: "Saint Nazaire, França",
+      subtitle: "2023",
+      img: "SaintNazaire.jpg",
+      description: "Porto histórico com rica herança marítima.",
+      type: "viagem",
+      date: "2023"
+    },
+    {
+      title: "Stradella, Itália",
+      subtitle: "2019",
+      img: "Stradella.jpeg",
+      description: "Cidade pitoresca com arquitetura renascentista.",
+      type: "viagem",
+      date: "2019"
+    },
+    {
+      title: "Tolouse, França",
+      subtitle: "2022",
+      img: "Tolouse.avif",
+      description: "Cidade vibrante com rica herança cultural.",
+      type: "viagem",
+      date: "2022"
     },
   ];
   cursos: Achievement[] = [
     {
-      title: "Mergulho Avançado",
-      subtitle: "Bombeiros 2018",
+      title: "Engenharia Informática",
+      subtitle: "Licenciatura",
+      img: "ipvc.webp",
+      description: "IPVC - Instituto Politécnico de Viana do Castelo 2023 - OnGoing",
+      type: "curso",
+      progress: 50,
+      completed: false
+    },
+    {
+      title: "12º Ano de Escolaridade",
+      subtitle: "Gestão e Manutenção de Equipamentos Informáticos",
+      img: "monserrate.jpg",
+      description: "Escola Secundaria de Monserrate 2013 - 2018",
+      type: "curso",
+      progress: 100,
+      completed: true
+    },
+    {
+      title: "Sistema Integrado de Emergência Médica (SIEM)",
+      subtitle: "Abordagem à Vitima e Reanimação",
+      img: "inem.png",
+      description: "Bombeiros Voluntários de Ponte de Lima 2018",
+      type: "curso",
+      progress: 100,
+      completed: true
+    },
+    {
+      title: "Abordagem Pré-hospitalar Básica às Emergências Médicas e de Trauma",
+      subtitle: "Emergências Médicas e Trauma",
+      img: "inem.png",
+      description: "Bombeiros Voluntários de Ponte de Lima 2018",
+      type: "curso",
+      progress: 100,
+      completed: true
+    },
+    {
+      title: "Técnicas de Desencarceramento",
+      subtitle: "Desencarceramento e Transporte de Vitimas",
+      img: "desencarceramento.jpg",
+      description: "Bombeiros Voluntários de Ponte de Lima 2018",
+      type: "curso",
+      progress: 100,
+      completed: true
+    },
+    {
+      title: "Open Water Diver",
+      subtitle: "Mergulho Subaquático até 18m",
       img: "mergulho.jpg",
-      description: "Técnicas de salvamento subaquático.",
+      description: "Silvasub Diving School 2018",
       type: "curso",
       progress: 100,
       completed: true
     },
     {
-      title: "UX/UI Design",
-      subtitle: "Academia Lisboa 2021",
-      img: "uxui.jpg",
-      description: "Metodologias de design centrado no utilizador.",
-      type: "curso",
-      progress: 100,
-      completed: true
-    },
-    {
-      title: "Drift Avançado",
-      subtitle: "Escola Drift 2023",
+      title: "Curso de Drift - Nível 1",
+      subtitle: "Automobilismo Desportivo",
       img: "drift.jpg",
-      description: "Manobras de derrapagem controlada.",
+      description: "Comval Racing - Racing School 2019",
       type: "curso",
-      progress: 80,
+      progress: 100,
+      completed: true
+    },
+    {
+      title: "Busca e Salvamento K9",
+      subtitle: "Cinotécnia SAR-K9",
+      img: "k9.jpg",
+      description: "Bombeiros Coluntários de Valongo 2019",
+      type: "curso",
+      progress: 100,
+      completed: true
+    },
+    {
+      title: "Curso de Drift - Nível 2",
+      subtitle: "Automobilismo Desportivo",
+      img: "drift.jpg",
+      description: "Comval Racing - Racing School 2019",
+      type: "curso",
+      progress: 100,
+      completed: true
+    },
+    {
+      title: "Telecomunicações - Iniciação",
+      subtitle: "SIRESP",
+      img: "siresp.webp",
+      description: "Bombeiros Voluntários de Ponte de Lima 2019",
+      type: "curso",
+      progress: 100,
+      completed: true
+    },
+    {
+      title: "Língua Inglesa - Vendas",
+      subtitle: "Inglês Comercial",
+      img: "ingles.jpg",
+      description: "Instituto de Emprego e Formação Profissional 2021",
+      type: "curso",
+      progress: 100,
+      completed: true
+    },
+    {
+      title: "Língua Inglesa - Atendimento ao Público",
+      subtitle: "Inglês Comercial",
+      img: "ingles.jpg",
+      description: "Instituto de Emprego e Formação Profissional 2021",
+      type: "curso",
+      progress: 100,
+      completed: true
+    },
+    {
+      title: "Código de Contas e Normas Contabilísticas",
+      subtitle: "Contabilidade",
+      img: "snc.png",
+      description: "Instituto de Emprego e Formação Profissional 2021",
+      type: "curso",
+      progress: 100,
+      completed: true
+    },
+    {
+      title: "Modelos de Demonstrações Financeiras",
+      subtitle: "Contabilidade",
+      img: "dr.webp",
+      description: "Instituto de Emprego e Formação Profissional 2021",
+      type: "curso",
+      progress: 100,
+      completed: true
+    },
+    {
+      title: "HTML5 e CSS3 / JS / TS / SWING / PHP / MYSQL / C / JAVA / C#",
+      subtitle: "Linguagens de Programação",
+      img: "lp.png",
+      description: "B7Web 2022 - OnGoing",
+      type: "curso",
+      progress: 99,
+      completed: false
+    },
+    {
+      title: "REACT / TAILWIND / BOOTSTRAP / IONIC / ANGULAR / SHADCN",
+      subtitle: "Frameworks",
+      img: "fw.png",
+      description: "B7Web 2022 - OnGoing",
+      type: "curso",
+      progress: 99,
       completed: false
     },
   ];
 
-  constructor(private modalController: ModalController) {}
+  constructor(private modalService: ModalService) {}
   
   ngOnInit() {
     this.filterItems();
@@ -134,15 +348,59 @@ export class ConquistasPage implements OnInit {
   }
 
   async openDetails(item: Achievement) {
-    const modal = await this.modalController.create({
-      component: DetailModalComponent,
-      componentProps: {
-        title: item.title,
-        img: `assets/images/${item.img}`,
-        description: item.description,
+    // Preparar as informações extras baseadas no tipo de conquista
+    const extraInfo = [
+      {
+        icon: item.type === 'viagem' ? 'airplane-outline' : 'school-outline',
+        label: item.type === 'viagem' ? 'Tipo' : 'Tipo',
+        value: item.type === 'viagem' ? 'Viagem' : 'Curso'
       },
+      {
+        icon: 'calendar-outline',
+        label: 'Data',
+        value: item.date || 'Não especificada'
+      }
+    ];
+    
+    // Adicionar informações de progresso se disponíveis
+    if (item.progress !== undefined) {
+      extraInfo.push({
+        icon: 'trending-up-outline',
+        label: 'Progresso',
+        value: `${item.progress}%`
+      });
+    }
+    
+    // Adicionar informações de conclusão se disponíveis
+    if (item.completed !== undefined) {
+      extraInfo.push({
+        icon: 'checkmark-circle-outline',
+        label: 'Status',
+        value: item.completed ? 'Concluído' : 'Em andamento'
+      });
+    }
+    
+    // Usar o serviço de modal para abrir o modal de detalhes
+    const { data } = await this.modalService.openDetailModal({
+      id: item.title,
+      title: item.title,
+      subtitle: item.subtitle,
+      img: item.img,
+      description: item.description,
+      extraInfo: extraInfo,
+      mainActionText: item.type === 'viagem' ? 'Ver no mapa' : undefined,
+      location: item.type === 'viagem' ? item.title : undefined,
+      isFavorite: false,
+      favorite: false,
+      onToggleFavorite: () => {
+        console.log(`Status de favorito alterado para: ${item.title}`);
+      }
     });
-    await modal.present();
+    
+    // Processar dados quando o modal fechar
+    if (data && data.favoriteChanged) {
+      console.log(`Status de favorito alterado para: ${item.title}`);
+    }
   }
 
   doRefresh(event: RefresherCustomEvent) {

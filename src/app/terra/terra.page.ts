@@ -1,16 +1,17 @@
 import {Component, ElementRef, OnInit, ViewChild} from "@angular/core";
 import {AlertController, IonContent, RefresherCustomEvent, ToastController} from "@ionic/angular";
-import {ModalController} from "@ionic/angular";
-import {DetailModalComponent} from "src/app/components/detail-modal/detail-modal.component";
+import {ModalService} from "src/app/services/modal.service";
 import {AnimationController} from "@ionic/angular";
 
 interface Place {
+  id?: string;
   title: string;
   subtitle: string;
   img: string;
   description: string;
   location?: string;
   coordinates?: { lat: number, lng: number };
+  mapUrl?: string;
 }
 
 @Component({
@@ -115,8 +116,7 @@ export class TerraPage implements OnInit {
   ];
 
   constructor(
-    private modalController: ModalController,
-    private animationCtrl: AnimationController,
+    private modalService: ModalService,
     private toastController: ToastController
   ) {}
   
@@ -157,43 +157,104 @@ export class TerraPage implements OnInit {
   }
   
   async openDetails(item: Place) {
-    const enterAnimation = (baseEl: any) => {
-      const backdropAnimation = this.animationCtrl.create()
-        .addElement(baseEl.querySelector('ion-backdrop'))
-        .fromTo('opacity', '0.01', 'var(--backdrop-opacity)');
-
-      const wrapperAnimation = this.animationCtrl.create()
-        .addElement(baseEl.querySelector('.modal-wrapper'))
-        .keyframes([
-          { offset: 0, opacity: '0', transform: 'scale(0.8)' },
-          { offset: 1, opacity: '1', transform: 'scale(1)' }
-        ]);
-
-      return this.animationCtrl.create()
-        .addElement(baseEl)
-        .easing('ease-out')
-        .duration(250)
-        .addAnimation([backdropAnimation, wrapperAnimation]);
-    };
-
-    const leaveAnimation = (baseEl: any) => {
-      return enterAnimation(baseEl).direction('reverse');
-    };
+    const itemId = item.id || item.title;
+    const isFavorite = this.isFavorite(itemId);
     
-    const modal = await this.modalController.create({
-      component: DetailModalComponent,
-      componentProps: {
-        title: item.title,
-        img: `assets/img/${item.img}`,
-        description: item.description,
-        location: item.location,
-        coordinates: item.coordinates
+    // Gerar mapUrl apenas se as coordenadas existirem
+    const mapUrl = item.mapUrl || (item.coordinates ? this.getMapUrl(item.coordinates) : '');
+    
+    // Criando informações extras mais detalhadas
+    let extraInfo = [
+      {
+        icon: 'location-outline',
+        label: 'Localização',
+        value: item.location || 'Não especificada'
       },
-      enterAnimation,
-      leaveAnimation
+      {
+        icon: 'information-circle-outline',
+        label: 'Tipo',
+        value: item.subtitle || 'Ponto de interesse'
+      }
+    ];
+    
+    // Adicionar coordenadas se disponíveis
+    if (item.coordinates) {
+      extraInfo.push({
+        icon: 'map-outline',
+        label: 'Coordenadas',
+        value: `${item.coordinates.lat.toFixed(4)}, ${item.coordinates.lng.toFixed(4)}`
+      });
+    }
+    
+    // Usar o serviço de modal para abrir o modal de detalhes
+    const { data } = await this.modalService.openDetailModal({
+      id: itemId,
+      title: item.title,
+      img: item.img,
+      description: item.description,
+      location: item.location,
+      subtitle: item.subtitle || 'Ponto de interesse',
+      coordinates: item.coordinates,
+      mapUrl: mapUrl,
+      extraInfo: extraInfo,
+      mainActionText: 'Ver no mapa',
+      isFavorite: isFavorite,
+      favorite: isFavorite,
+      onToggleFavorite: () => this.toggleFavorite(itemId, item.title)
     });
     
-    await modal.present();
+    // Processar dados quando o modal fechar
+    if (data && data.favoriteChanged) {
+      this.toggleFavorite(itemId, item.title);
+      this.saveFavorites();
+    }
+  }
+  
+  // Método para verificar se um item é favorito
+  isFavorite(id: string): boolean {
+    const favorites = this.getFavorites();
+    return favorites.some(fav => fav.id === id);
+  }
+  
+  // Método para alternar o estado de favorito de um item
+  toggleFavorite(id: string, title: string) {
+    const favorites = this.getFavorites();
+    const index = favorites.findIndex(fav => fav.id === id);
+    
+    if (index >= 0) {
+      // Remover dos favoritos
+      favorites.splice(index, 1);
+      this.presentToast(`Removido dos favoritos`);
+    } else {
+      // Adicionar aos favoritos
+      favorites.push({ id, title });
+      this.presentToast(`Adicionado aos favoritos`);
+    }
+    
+    this.saveFavorites(favorites);
+  }
+  
+  // Método para obter a lista de favoritos
+  getFavorites(): {id: string, title: string}[] {
+    try {
+      const saved = localStorage.getItem('terra-favorites');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      console.error('Erro ao carregar favoritos:', e);
+      return [];
+    }
+  }
+  
+  // Método para salvar favoritos
+  saveFavorites(favorites?: {id: string, title: string}[]) {
+    const favsToSave = favorites || this.getFavorites();
+    localStorage.setItem('terra-favorites', JSON.stringify(favsToSave));
+  }
+  
+  // Método para criar uma URL de mapa a partir de coordenadas
+  getMapUrl(coordinates: { lat: number, lng: number }): string {
+    if (!coordinates) return '';
+    return `https://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}`;
   }
 
   doRefresh(event: RefresherCustomEvent) {

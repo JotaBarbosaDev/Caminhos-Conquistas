@@ -72,15 +72,9 @@ export class PerfilPage {
 
   education: Education[] = [
     {
-      degree: "Mestrado em Engenharia Informática",
-      institution: "Universidade do Minho",
-      period: "2018-2020",
-      description: "Especialização em Interfaces Homem-Máquina e Design de Interação."
-    },
-    {
       degree: "Licenciatura em Engenharia Informática",
       institution: "Instituto Politécnico de Viana do Castelo",
-      period: "2015-2018",
+      period: "2023-OnGoing",
       description: "Foco em desenvolvimento de software e sistemas web."
     }
   ];

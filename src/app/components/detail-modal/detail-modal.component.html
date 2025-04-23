@@ -18,10 +18,10 @@
     
     <!-- Ações rápidas sobre a imagem -->
     <div class="image-actions">
-      <ion-button shape="round" fill="solid" size="small" color="light" class="action-button"
-                 (click)="toggleFavorite()" *ngIf="id">
+      <ion-button shape="round" fill="solid" size="small" color="light" class="action-button favorite-btn"
+                 (click)="toggleFavorite()">
         <ion-icon [name]="isFavorite ? 'heart' : 'heart-outline'" 
-                  [color]="isFavorite ? 'favorite' : 'medium'">
+                  [color]="isFavorite ? 'danger' : 'medium'">
         </ion-icon>
       </ion-button>
       

@@ -1,120 +1,70 @@
-import {Component, Input} from "@angular/core";
-import {ModalController} from "@ionic/angular";
-import {AnimationController} from "@ionic/angular";
+import { Component, Input } from "@angular/core";
+import { ModalController, ToastController } from "@ionic/angular";
+import { AnimationController } from "@ionic/angular";
+
+// Interface para informações extras exibidas no modal
+export interface ExtraInfo {
+  icon: string;
+  label: string;
+  value: string;
+}
 
 @Component({
   selector: "app-detail-modal",
-  standalone: false,
-  template: `
-    <ion-header class="ion-no-border">
-      <ion-toolbar color="primary">
-        <ion-title>{{ title }}</ion-title>
-        <ion-buttons slot="end">
-          <ion-button (click)="toggleFavorite()" class="favorite-btn">
-            <ion-icon [name]="favorite ? 'heart' : 'heart-outline'" 
-                      [class.favorited]="favorite"></ion-icon>
-          </ion-button>
-          <ion-button (click)="dismiss()">
-            <ion-icon name="close-outline"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="ion-padding">
-      <div class="image-container">
-        <img [src]="img" alt="{{ title }}" class="detail-image"/>
-      </div>
-      
-      <h2 class="section-title ion-margin-top">Descrição</h2>
-      <p class="description">{{ description }}</p>
-      
-      <ion-grid>
-        <ion-row>
-          <ion-col>
-            <ion-button expand="block" (click)="dismiss()" class="close-button">
-              <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
-              Voltar
-            </ion-button>
-          </ion-col>
-          <ion-col *ngIf="hasShareButton">
-            <ion-button expand="block" (click)="shareItem()" color="tertiary">
-              <ion-icon name="share-social-outline" slot="start"></ion-icon>
-              Compartilhar
-            </ion-button>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-content>
-  `,
-  styles: [`
-    .detail-image {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-    
-    .image-container {
-      position: relative;
-      margin-bottom: 16px;
-    }
-    
-    .section-title {
-      font-size: 20px;
-      font-weight: 600;
-      color: var(--ion-color-dark);
-      margin-bottom: 8px;
-    }
-    
-    .description {
-      font-size: 16px;
-      line-height: 1.6;
-      color: var(--ion-color-medium-shade);
-      margin-bottom: 24px;
-    }
-    
-    .favorite-btn ion-icon {
-      font-size: 24px;
-      transition: all 0.3s ease;
-    }
-    
-    .favorite-btn .favorited {
-      color: #ff5b71;
-      transform: scale(1.2);
-    }
-    
-    .close-button {
-      margin-top: 16px;
-    }
-  `]
+  templateUrl: "./detail-modal.component.html",
+  styleUrls: ["./detail-modal.component.scss"],
+  standalone: false
 })
 export class DetailModalComponent {
-  @Input() title!: string;
-  @Input() img!: string;
-  @Input() description!: string;
+  @Input() id: string = '';
+  @Input() title: string = '';
+  @Input() img: string = '';
+  @Input() subtitle: string = '';
+  @Input() description: string = '';
+  @Input() location: string = '';
+  @Input() coordinates: { lat: number, lng: number } | null = null;
+  @Input() mapUrl: string = '';
+  @Input() isFavorite: boolean = false;
   @Input() favorite: boolean = false;
+  @Input() extraInfo: ExtraInfo[] = [];
+  @Input() mainActionText: string = '';
   @Input() onToggleFavorite: Function = () => {};
   
-  hasShareButton: boolean = false;
   favoriteChanged: boolean = false;
-
+  canShare: boolean = false;
+  
   constructor(
     private modalCtrl: ModalController,
+    private toastCtrl: ToastController,
     private animationCtrl: AnimationController
   ) {
-    // Verificar se está em um ambiente que suporta compartilhamento
-    this.hasShareButton = !!navigator.share;
+    // Verificar se a API de compartilhamento está disponível
+    this.canShare = !!navigator && !!navigator.share;
   }
   
+  ngOnInit() {
+    // Inicializar estados
+    if (this.favorite !== undefined) {
+      this.isFavorite = this.favorite;
+    }
+    
+    // Gerar URL do mapa se temos coordenadas mas não temos URL definida
+    if (this.coordinates && !this.mapUrl) {
+      this.mapUrl = `https://www.google.com/maps?q=${this.coordinates.lat},${this.coordinates.lng}`;
+    }
+  }
+
+  // Fechar o modal
   dismiss() {
     this.modalCtrl.dismiss({
       favoriteChanged: this.favoriteChanged
     });
   }
   
+  // Alternar estado de favorito
   toggleFavorite() {
-    this.favorite = !this.favorite;
+    this.isFavorite = !this.isFavorite;
+    this.favorite = this.isFavorite;
     this.favoriteChanged = true;
     
     // Efeito de animação no ícone
@@ -132,23 +82,65 @@ export class DetailModalComponent {
       animation.play();
     }
     
+    // Mostrar feedback ao usuário
+    this.showToast(this.isFavorite ? 'Adicionado aos favoritos' : 'Removido dos favoritos');
+    
     // Chamar função do componente pai
     if (typeof this.onToggleFavorite === 'function') {
       this.onToggleFavorite();
     }
   }
   
-  async shareItem() {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: this.title,
-          text: this.description,
-          url: window.location.href
-        });
-      } catch (err) {
-        console.error('Erro ao compartilhar:', err);
+  // Compartilhar conteúdo
+  async shareContent() {
+    if (!navigator.share) {
+      this.showToast('Compartilhamento não suportado neste navegador');
+      return;
+    }
+    
+    try {
+      await navigator.share({
+        title: this.title,
+        text: this.description,
+        url: window.location.href
+      });
+      this.showToast('Conteúdo compartilhado com sucesso!');
+    } catch (error: any) {
+      console.error('Erro ao compartilhar:', error);
+      // Usuário cancelou o compartilhamento - não exibir erro
+      if (error.name !== 'AbortError') {
+        this.showToast('Não foi possível compartilhar');
       }
     }
+  }
+  
+  // Ação principal
+  onMainAction() {
+    if (this.mapUrl) {
+      window.open(this.mapUrl, '_blank');
+    }
+  }
+  
+  // Tratar erro ao carregar imagem
+  handleImageError(event: any) {
+    event.target.src = 'assets/images/placeholder.jpg';
+  }
+  
+  // Exibir toast para feedback
+  private async showToast(message: string) {
+    const toast = await this.toastCtrl.create({
+      message: message,
+      duration: 2000,
+      position: 'bottom',
+      color: 'primary',
+      buttons: [
+        {
+          icon: 'close-outline',
+          role: 'cancel'
+        }
+      ]
+    });
+    
+    await toast.present();
   }
 }
