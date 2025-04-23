@@ -38,9 +38,9 @@ Com ele é possível ver as minhas informações pessoais, conquistas, gostos e 
 ### Página de Perfil
 
 <div align="center">
-  <img src="screenshots/perfilAbout.PNG" alt="Perfil - About" width="250px">
-  <img src="screenshots/perfilEducacao.PNG" alt="Perfil - Experiência" width="250px">
-  <img src="screenshots/perfilExperiencia.PNG" alt="Perfil - Educação" width="250px">
+  <img src="src/assets/images/screenshots/perfilAbout.PNG" alt="Perfil - About" width="250px">
+  <img src="src/assets/images/screenshots/perfilExperiencia.PNG" alt="Perfil - Experiência" width="250px">
+  <img src="src/assets/images/screenshots/perfilEducacao.PNG" alt="Perfil - Educação" width="250px">
 </div>
 
 A página de perfil oferece uma visão completa das informações pessoais e profissionais, organizada em três seções principais através de um segmento de navegação:
