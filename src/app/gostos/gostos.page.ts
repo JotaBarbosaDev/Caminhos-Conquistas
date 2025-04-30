@@ -11,6 +11,7 @@ interface Item {
   description: string;
   favorite?: boolean;
   location?: string;
+  expanded?: boolean; // Nova propriedade para controlar expansão
   extraInfo?: Array<{icon: string; label: string; value: string}>;
 }
 
@@ -26,13 +27,17 @@ export class GostosPage implements OnInit {
   selectedCategory = "conv";
   lastSelectedCategory = "conv";
   
+  // Item que está expandido atualmente
+  expandedItem: Item | null = null;
+  
   convivio: Item[] = [
     {
       title: "Noites de Cinema",
       subtitle: "Sessões em casa",
       img: "cinema.jpg",
       description: "Adoro ver os últimos lançamentos com pipocas e amigos.",
-      favorite: false
+      favorite: false,
+      expanded: false
     },
     {
       title: "Jogos de Tabuleiro",
@@ -40,60 +45,71 @@ export class GostosPage implements OnInit {
       img: "tabuleiro.jpg",
       description:
         "Diversão estratégica com clássicos como Catan e Carcassonne.",
-      favorite: false
+      favorite: false,
+      expanded: false
     },
   ];
+  
+  // Resto dos arrays com a propriedade expanded adicionada
   gastronomia: Item[] = [
     {
       title: "Francesinha",
       subtitle: "Especialidade do Porto",
       img: "francesinha.jpg",
       description: "Sabor intenso de carne, queijo e molho especial.",
-      favorite: false
+      favorite: false,
+      expanded: false
     },
     {
       title: "Sarrabulho",
       subtitle: "Prato Tradicional em Ponte de Lima",
       img: "sarrabulho.webp",
       description: "Carne de porco com arroz de sangue e especiarias.",
-      favorite: false
+      favorite: false,
+      expanded: false
     },
     {
       title: "Sushi",
       subtitle: "Comida Japonêsa",
       img: "sushi.webp",
       description: "Rolo de arroz com peixe fresco e vegetais.",
-      favorite: false
+      favorite: false,
+      expanded: false
     },
     {
       title: "Bacalhau à Brás",
       subtitle: "Prato Tradicional Português",
       img: "bacalhaubras.jpg",
       description: "Bacalhau desfiado com batata frita e ovos mexidos.",
-      favorite: false
+      favorite: false,
+      expanded: false
     },
   ];
+  
   desporto: Item[] = [
     {
       title: "Ginasio",
       subtitle: "Treinos regulares",
       img: "ginasio.webp",
       description: "Treinos de força e resistência para manter a forma.",
-      favorite: false
+      favorite: false,
+      expanded: false
     },
     {
       title: "Ténis",
       subtitle: "Pavilhão Municipal",
       img: "tenis.webp",
       description: "Desporto para aliviar o stress.",
-      favorite: false
+      favorite: false,
+      expanded: false
     },
     {
       title: "Caminhadas",
       subtitle: "Trilhos Locais",
       img: "caminhada.png",
       description: "Explorar a natureza em trilhos nas montanhas para sair da rotina do computador.",
-      favorite: false
+      favorite: false,
+      expanded: false
     },
   ];
 
@@ -120,12 +136,42 @@ export class GostosPage implements OnInit {
     }
   }
 
-  async openDetails(item: Item) {
-    const itemId = item.id || item.title;
+  // Novo método para expandir/colapsar o card
+  toggleItemExpansion(item: Item) {
+    // Fecha o item que estava expandido anteriormente
+    if (this.expandedItem && this.expandedItem !== item) {
+      this.expandedItem.expanded = false;
+    }
     
-    // Criar informações extras para o modal baseado na categoria
-    let extraInfo = [];
+    // Alterna o estado do item atual
+    item.expanded = !item.expanded;
+    
+    // Atualiza o item expandido atual
+    this.expandedItem = item.expanded ? item : null;
+    
+    // Animação para o item
+    setTimeout(() => {
+      const element = document.getElementById(`card-${item.title.replace(/\s+/g, '-').toLowerCase()}`);
+      if (element) {
+        const animation = this.animationCtrl.create()
+          .addElement(element)
+          .duration(300)
+          .easing('ease-out')
+          .keyframes([
+            { offset: 0, transform: 'scale(1)' },
+            { offset: 0.5, transform: 'scale(1.03)' },
+            { offset: 1, transform: 'scale(1)' }
+          ]);
+        
+        animation.play();
+      }
+    }, 50);
+  }
+
+  // Obter informações extras para o card expandido
+  getExtraInfo(item: Item): Array<{icon: string; label: string; value: string}> {
     const category = this.selectedCategory;
+    let extraInfo = [];
     
     if (category === "gastr") {
       extraInfo = [
@@ -148,7 +194,7 @@ export class GostosPage implements OnInit {
           value: 'Desporto'
         },
         {
-          icon: 'location-outline', 
+          icon: 'location-outline',
           label: 'Local',
           value: item.subtitle
         }
@@ -168,26 +214,7 @@ export class GostosPage implements OnInit {
       ];
     }
     
-    // Usar o serviço de modal para abrir o modal de detalhes
-    const { data } = await this.modalService.openDetailModal({
-      id: itemId,
-      title: item.title,
-      subtitle: item.subtitle || 'Interesse',
-      img: item.img,
-      description: item.description,
-      location: item.location,
-      extraInfo: item.extraInfo || extraInfo,
-      isFavorite: item.favorite,
-      favorite: item.favorite,
-      mainActionText: 'Mais informações',
-      onToggleFavorite: () => this.toggleFavorite(item)
-    });
-    
-    // Processar dados quando o modal fechar
-    if (data && data.favoriteChanged) {
-      this.toggleFavorite(item);
-      this.saveFavorites();
-    }
+    return extraInfo;
   }
 
   doRefresh(event: RefresherCustomEvent) {
@@ -204,11 +231,32 @@ export class GostosPage implements OnInit {
     if (this.lastSelectedCategory !== this.selectedCategory) {
       this.content.scrollToTop(300);
       this.lastSelectedCategory = this.selectedCategory;
+      
+      // Reset o item expandido quando mudar de categoria
+      if (this.expandedItem) {
+        this.expandedItem.expanded = false;
+        this.expandedItem = null;
+      }
     }
   }
   
   async toggleFavorite(item: Item) {
     item.favorite = !item.favorite;
+    
+    // Efeito de animação no ícone
+    const favoriteIcon = document.querySelector(`#card-${item.title.replace(/\s+/g, '-').toLowerCase()} .favorite-icon`);
+    if (favoriteIcon) {
+      const animation = this.animationCtrl.create()
+        .addElement(favoriteIcon)
+        .duration(300)
+        .keyframes([
+          { offset: 0, transform: 'scale(1)' },
+          { offset: 0.5, transform: 'scale(1.3)' },
+          { offset: 1, transform: 'scale(1)' }
+        ]);
+      
+      animation.play();
+    }
     
     await this.presentToast(
       item.favorite 

@@ -12,11 +12,13 @@
 </ion-header>
 
 <ion-content>
-  <!-- Imagem de destaque -->
+  <!-- Imagem de destaque com efeito parallax -->
   <div class="detail-image-container">
-    <img [src]="img" [alt]="title" (error)="handleImageError($event)">
+    <div class="parallax-image">
+      <img [src]="img" [alt]="title" (error)="handleImageError($event)">
+    </div>
     
-    <!-- Ações rápidas sobre a imagem -->
+    <!-- Ações rápidas sobre a imagem com efeito de pulso -->
     <div class="image-actions">
       <ion-button shape="round" fill="solid" size="small" color="light" class="action-button favorite-btn"
                  (click)="toggleFavorite()">
@@ -25,7 +27,7 @@
         </ion-icon>
       </ion-button>
       
-      <ion-button shape="round" fill="solid" size="small" color="light" class="action-button" 
+      <ion-button shape="round" fill="solid" size="small" color="light" class="action-button pulse-animation" 
                  (click)="shareContent()" *ngIf="canShare">
         <ion-icon name="share-social-outline"></ion-icon>
       </ion-button>
@@ -36,15 +38,16 @@
       </ion-button>
     </div>
     
-    <!-- Badge de subtítulo/categoria -->
+    <!-- Badge de subtítulo/categoria com novo visual -->
     <div class="detail-badge" *ngIf="subtitle">
-      {{ subtitle }}
+      <ion-icon name="pricetag-outline"></ion-icon>
+      <span>{{ subtitle }}</span>
     </div>
   </div>
 
-  <!-- Conteúdo principal -->
+  <!-- Conteúdo principal com animações aprimoradas -->
   <div class="detail-content animate-in">
-    <h1>{{ title }}</h1>
+    <h1 class="title-animation">{{ title }}</h1>
     
     <!-- Localização se aplicável -->
     <div class="location-info" *ngIf="location">
@@ -52,24 +55,34 @@
       <span>{{ location }}</span>
     </div>
     
-    <!-- Descrição principal -->
+    <!-- Descrição principal com suporte a markdown -->
     <p class="detail-description">{{ description }}</p>
     
-    <!-- Dados adicionais organizados em ícones -->
+    <!-- Dados adicionais com layout modernizado -->
     <div class="additional-info" *ngIf="extraInfo && extraInfo.length > 0">
-      <div class="info-item" *ngFor="let info of extraInfo">
-        <ion-icon [name]="info.icon || 'information-circle-outline'"></ion-icon>
-        <div class="info-content">
-          <div class="info-label">{{ info.label }}</div>
-          <div class="info-value">{{ info.value }}</div>
-        </div>
+      <div class="info-item fade-in-item" *ngFor="let info of extraInfo; let i = index" [style.animation-delay]="(i * 0.1) + 's'">
+        <ion-chip color="primary" outline="true">
+          <ion-icon [name]="info.icon || 'information-circle-outline'"></ion-icon>
+          <ion-label>{{ info.label }}</ion-label>
+        </ion-chip>
+        <div class="info-value">{{ info.value }}</div>
       </div>
+    </div>
+    
+    <!-- Seção de avaliação/feedback -->
+    <div class="rating-section" *ngIf="subtitle && subtitle.toLowerCase().indexOf('gastronomia') >= 0">
+      <h3>O que achou?</h3>
+      <div class="rating-stars">
+        <ion-icon name="star" *ngFor="let star of [1,2,3,4,5]" (click)="rateItem(star)"></ion-icon>
+      </div>
+      <p class="rating-hint">Toque para avaliar</p>
     </div>
   </div>
 
   <!-- Botão de ação principal -->
   <div class="action-container" *ngIf="mainActionText">
-    <ion-button expand="block" (click)="onMainAction()">
+    <ion-button expand="block" (click)="onMainAction()" class="pulse-button">
+      <ion-icon [name]="getActionIcon()" slot="start"></ion-icon>
       {{ mainActionText }}
     </ion-button>
   </div>

@@ -40,17 +40,48 @@
     </h2>
   </div>
 
-  <div class="horizontal-scroll">
-    <ion-card *ngFor="let i of getItems(selectedCategory)" (click)="openDetails(i)" class="item-card animate__animated animate__fadeIn">
+  <div class="vertical-cards">
+    <ion-card *ngFor="let i of getItems(selectedCategory)" 
+              (click)="toggleItemExpansion(i)" 
+              class="item-card animate__animated animate__fadeIn" 
+              [ngClass]="{'expanded': i.expanded}"
+              [id]="'card-' + i.title.replace(' ', '-').toLowerCase()">
       <div class="img-container">
         <img src="assets/images/{{ i.img }}" alt="{{ i.title }}" />
         <div class="overlay-gradient"></div>
-        <ion-icon *ngIf="i.favorite" name="heart" class="favorite-icon"></ion-icon>
+        <ion-button *ngIf="!i.favorite" class="favorite-button" fill="clear" (click)="toggleFavorite(i); $event.stopPropagation()">
+          <ion-icon name="heart-outline" class="favorite-icon-outline"></ion-icon>
+        </ion-button>
+        <ion-icon *ngIf="i.favorite" name="heart" class="favorite-icon" (click)="toggleFavorite(i); $event.stopPropagation()"></ion-icon>
       </div>
       <ion-card-header>
         <ion-card-title class="ion-text-wrap">{{ i.title }}</ion-card-title>
         <ion-card-subtitle>{{ i.subtitle }}</ion-card-subtitle>
       </ion-card-header>
+      
+      <!-- Conteúdo expandido -->
+      <ion-card-content *ngIf="i.expanded" class="expanded-content animate__animated animate__fadeIn">
+        <p class="item-description">{{ i.description }}</p>
+        
+        <!-- Informações extras -->
+        <div class="extra-info">
+          <div class="info-item" *ngFor="let info of getExtraInfo(i)">
+            <ion-chip outline="true" color="primary">
+              <ion-icon [name]="info.icon"></ion-icon>
+              <ion-label>{{ info.label }}</ion-label>
+            </ion-chip>
+            <div class="info-value">{{ info.value }}</div>
+          </div>
+        </div>
+        
+        <!-- Ações -->
+        <div class="card-actions">
+          <ion-button fill="clear" (click)="toggleFavorite(i); $event.stopPropagation()" color="primary">
+            <ion-icon slot="start" [name]="i.favorite ? 'heart' : 'heart-outline'"></ion-icon>
+            {{ i.favorite ? 'Favorito' : 'Adicionar aos favoritos' }}
+          </ion-button>
+        </div>
+      </ion-card-content>
     </ion-card>
   </div>
   
