@@ -36,6 +36,7 @@
     --indicator-color: white;
     
     min-height: 44px;
+    font-weight: 500;
     font-size: 13px;
     --padding-start: 4px;
     --padding-end: 4px;
@@ -57,23 +58,16 @@
   }
 }
 
-// Scroll horizontal melhorado
-.horizontal-scroll {
+// Cartões em layout vertical
+.vertical-cards {
   display: flex;
-  overflow-x: auto;
+  flex-direction: column;
+  gap: 16px;
   padding: 8px 0;
-  scrollbar-width: none;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  mask-image: linear-gradient(to right, black 80%, transparent 100%);
   
-  &::-webkit-scrollbar {
-    display: none;
-  }
-
   .item-card {
-    flex: 0 0 280px;
-    margin-right: 16px;
+    width: 100%;
+    margin-right: 0;
     border-radius: 16px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -81,6 +75,11 @@
     
     &:active {
       transform: scale(0.97);
+    }
+    
+    // Estilo quando card está expandido
+    &.expanded {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
     }
     
     .img-container {
@@ -118,6 +117,22 @@
         animation: pulse 1.5s infinite ease-in-out;
       }
       
+      .favorite-button {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        z-index: 10;
+        --background: rgba(255, 255, 255, 0.7);
+        --padding-start: 8px;
+        --padding-end: 8px;
+        height: 36px;
+        
+        .favorite-icon-outline {
+          font-size: 20px;
+          color: var(--ion-color-medium);
+        }
+      }
+      
       @keyframes pulse {
         0% { transform: scale(1); }
         50% { transform: scale(1.1); }
@@ -147,6 +162,62 @@
         transform: scale(1.05);
       }
     }
+    
+    // Conteúdo expandido
+    .expanded-content {
+      padding-top: 0;
+      
+      .item-description {
+        color: var(--ion-color-dark);
+        font-size: 16px;
+        line-height: 1.5;
+        margin-bottom: 16px;
+      }
+      
+      .extra-info {
+        background-color: rgba(var(--ion-color-primary-rgb), 0.05);
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 16px;
+        
+        .info-item {
+          display: flex;
+          flex-direction: column;
+          margin-bottom: 12px;
+          
+          &:last-child {
+            margin-bottom: 0;
+          }
+          
+          ion-chip {
+            --background: transparent;
+            margin: 0 0 8px 0;
+            padding-left: 0;
+            height: 28px;
+            
+            ion-label {
+              font-weight: 600;
+            }
+          }
+          
+          .info-value {
+            font-size: 15px;
+            color: var(--ion-color-dark);
+            padding-left: 8px;
+          }
+        }
+      }
+      
+      .card-actions {
+        display: flex;
+        justify-content: flex-start;
+        margin-top: 8px;
+        
+        ion-button {
+          font-weight: 500;
+        }
+      }
+    }
   }
 }
 
@@ -171,7 +242,7 @@
   }
 }
 
-// Animações (dependem da biblioteca Animate.css)
+// Animações
 @keyframes fadeIn {
   from {
     opacity: 0;
