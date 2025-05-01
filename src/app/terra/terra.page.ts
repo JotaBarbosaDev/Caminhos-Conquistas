@@ -38,7 +38,7 @@ export class TerraPage implements OnInit {
     {
       title: "Castelo de Santiago da Barra",
       subtitle: "Fortaleza histórica",
-      img: "barra-castle.jpg",
+      img: "../../assets/images/castelobarra.jpg",
       description: "Construído no século XVI para defesa costeira. Este forte impressionante está localizado na foz do rio Lima e oferece vistas panorâmicas do oceano e da cidade de Viana do Castelo.",
       location: "Viana do Castelo",
       coordinates: { lat: 41.6913, lng: -8.8348 }
@@ -46,7 +46,7 @@ export class TerraPage implements OnInit {
     {
       title: "Praia do Cabedelo",
       subtitle: "Costa selvagem",
-      img: "cabedelo.jpg",
+      img: "../../assets/images/PraiadoCabedelo.jpg",
       description: "Ideal para surf e longas caminhadas. Com dunas extensas e águas cristalinas, esta praia é um paraíso para os amantes da natureza e desportos aquáticos.",
       location: "Sul de Viana do Castelo",
       coordinates: { lat: 41.6818, lng: -8.8407 }
@@ -54,7 +54,7 @@ export class TerraPage implements OnInit {
     {
       title: "Santuário de Santa Luzia",
       subtitle: "Monumento religioso",
-      img: "santa-luzia.jpg",
+      img: "../../assets/images/santuariostluzia.jpg",
       description: "Um impressionante santuário no topo da montanha com vistas deslumbrantes sobre a cidade, o rio Lima e o oceano Atlântico.",
       location: "Monte de Santa Luzia",
       coordinates: { lat: 41.7011, lng: -8.8375 }
@@ -65,7 +65,7 @@ export class TerraPage implements OnInit {
     {
       title: "Ponte Romana",
       subtitle: "Património UNESCO",
-      img: "ponte-romana.jpg",
+      img: "../../assets/images/ponteromana.jpg",
       description: "Estrutura centenária sobre o Rio Lima. Esta ponte medieval com 24 arcos é o símbolo mais emblemático da vila de Ponte de Lima e um marco histórico essencial.",
       location: "Centro de Ponte de Lima",
       coordinates: { lat: 41.7674, lng: -8.5835 }
@@ -73,7 +73,7 @@ export class TerraPage implements OnInit {
     {
       title: "Jardim do Arnado",
       subtitle: "Espaço verde",
-      img: "arnado.jpg",
+      img: "../../assets/images/jardimarnado.jpg",
       description: "Parque botânico com vistas magníficas. Situado junto ao rio, este jardim encantador oferece um espaço tranquilo para passeios e contemplação da natureza.",
       location: "Margem do Rio Lima",
       coordinates: { lat: 41.7659, lng: -8.5813 }
@@ -81,7 +81,7 @@ export class TerraPage implements OnInit {
     {
       title: "Festival Internacional de Jardins",
       subtitle: "Evento anual",
-      img: "festival-jardins.jpg",
+      img: "../../assets/images/festivaljardins.jpg",
       description: "Um evento único onde artistas e paisagistas de todo o mundo criam jardins temáticos inovadores e surpreendentes.",
       location: "Parque do Arnado",
       coordinates: { lat: 41.7663, lng: -8.5809 }
@@ -92,7 +92,7 @@ export class TerraPage implements OnInit {
     {
       title: "Igreja Matriz de Freixo",
       subtitle: "Arquitetura barroca",
-      img: "igreja-freixo.jpg",
+      img: "../../assets/images/igrejafreixo.jpg",
       description: "Igreja secular com belos detalhes. Este templo histórico apresenta um notável trabalho em pedra e talha dourada que reflete a importância espiritual da comunidade.",
       location: "Centro de Freixo",
       coordinates: { lat: 41.7531, lng: -8.5337 }
@@ -100,7 +100,7 @@ export class TerraPage implements OnInit {
     {
       title: "Campo de Lavradio",
       subtitle: "Paisagem rural",
-      img: "campo-lavradio.jpg",
+      img: "../../assets/images/campo-lavradio.jpg",
       description: "Área agrícola típica da região. Estes campos verdejantes são o coração da economia local e oferecem um vislumbre autêntico da vida rural portuguesa.",
       location: "Arredores de Freixo",
       coordinates: { lat: 41.7523, lng: -8.5378 }
@@ -108,7 +108,7 @@ export class TerraPage implements OnInit {
     {
       title: "Festa de São Sebastião",
       subtitle: "Tradição local",
-      img: "festa-sao-sebastiao.jpg",
+      img: "../../assets/images/festassebastiao.jpg",
       description: "Celebração anual em honra do santo padroeiro, com procissões, música tradicional e gastronomia regional.",
       location: "Centro da freguesia",
       coordinates: { lat: 41.7529, lng: -8.5339 }
