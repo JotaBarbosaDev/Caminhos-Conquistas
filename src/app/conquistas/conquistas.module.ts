@@ -1,17 +1,17 @@
-import {NgModule} from "@angular/core";
-import {CommonModule} from "@angular/common";
-import {FormsModule} from "@angular/forms";
-import {IonicModule} from "@ionic/angular";
-import {ConquistasPage} from "./conquistas.page";
-import {ConquistasPageRoutingModule} from "./conquistas-routing.module";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { ConquistasPage } from './conquistas.page';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: ConquistasPage
+  }
+];
 
 @NgModule({
   imports: [
-    CommonModule, 
-    FormsModule, 
-    IonicModule, 
-    ConquistasPageRoutingModule
-  ],
-  declarations: [ConquistasPage],
+    RouterModule.forChild(routes)
+  ]
 })
 export class ConquistasPageModule {}

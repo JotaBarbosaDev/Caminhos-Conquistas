@@ -1,7 +1,12 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
-import {AlertController, IonContent, RefresherCustomEvent, ToastController} from "@ionic/angular";
+import {AlertController, IonContent, RefresherCustomEvent, ToastController, IonicModule} from "@ionic/angular";
 import {ModalService} from "src/app/services/modal.service";
 import {AnimationController} from "@ionic/angular";
+import {FavoritesService, FavoriteItem} from "../services/favorites.service";
+import {CommonModule} from "@angular/common";
+import {FormsModule} from "@angular/forms";
+import {FavoritesComponent} from "../components/favorites/favorites.component";
+import {HeaderWithFavoritesComponent} from "../components/favorites/header.component";
 
 interface Item {
   id?: string;
@@ -11,7 +16,7 @@ interface Item {
   description: string;
   favorite?: boolean;
   location?: string;
-  expanded?: boolean; // Nova propriedade para controlar expansão
+  expanded?: boolean;
   extraInfo?: Array<{icon: string; label: string; value: string}>;
 }
 
@@ -19,13 +24,21 @@ interface Item {
   selector: "app-gostos",
   templateUrl: "./gostos.page.html",
   styleUrls: ["./gostos.page.scss"],
-  standalone: false,
+  standalone: true,
+  imports: [
+    CommonModule,
+    IonicModule,
+    FormsModule,
+    FavoritesComponent,
+    HeaderWithFavoritesComponent
+  ]
 })
 export class GostosPage implements OnInit {
   @ViewChild(IonContent) content!: IonContent;
   
   selectedCategory = "conv";
   lastSelectedCategory = "conv";
+  showFavorites: boolean = false;
   
   // Item que está expandido atualmente
   expandedItem: Item | null = null;
@@ -50,7 +63,6 @@ export class GostosPage implements OnInit {
     },
   ];
   
-  // Resto dos arrays com a propriedade expanded adicionada
   gastronomia: Item[] = [
     {
       title: "Francesinha",
@@ -117,12 +129,22 @@ export class GostosPage implements OnInit {
     private modalService: ModalService,
     private toastController: ToastController,
     private alertController: AlertController,
-    private animationCtrl: AnimationController
+    private animationCtrl: AnimationController,
+    private favoritesService: FavoritesService // Injetando o serviço de favoritos
   ) {}
   
   ngOnInit() {
     // Carregar favoritos salvos do localStorage, se houver
     this.loadFavorites();
+    
+    // Sincronizar detalhes dos favoritos com o serviço
+    this.syncFavoritesDetails();
+    
+    // Inscreva-se para atualizações no serviço de favoritos
+    this.favoritesService.favorites$.subscribe(() => {
+      // Atualizar o status de favoritos dos itens sempre que houver mudanças no serviço
+      this.updateLocalFavoritesFromService();
+    });
   }
   
   getItems(category: string): Item[] {
@@ -136,20 +158,14 @@ export class GostosPage implements OnInit {
     }
   }
 
-  // Novo método para expandir/colapsar o card
   toggleItemExpansion(item: Item) {
-    // Fecha o item que estava expandido anteriormente
     if (this.expandedItem && this.expandedItem !== item) {
       this.expandedItem.expanded = false;
     }
     
-    // Alterna o estado do item atual
     item.expanded = !item.expanded;
-    
-    // Atualiza o item expandido atual
     this.expandedItem = item.expanded ? item : null;
     
-    // Animação para o item
     setTimeout(() => {
       const element = document.getElementById(`card-${item.title.replace(/\s+/g, '-').toLowerCase()}`);
       if (element) {
@@ -168,7 +184,6 @@ export class GostosPage implements OnInit {
     }, 50);
   }
 
-  // Obter informações extras para o card expandido
   getExtraInfo(item: Item): Array<{icon: string; label: string; value: string}> {
     const category = this.selectedCategory;
     let extraInfo = [];
@@ -199,7 +214,7 @@ export class GostosPage implements OnInit {
           value: item.subtitle
         }
       ];
-    } else { // convívio
+    } else {
       extraInfo = [
         {
           icon: 'people-outline',
@@ -218,7 +233,6 @@ export class GostosPage implements OnInit {
   }
 
   doRefresh(event: RefresherCustomEvent) {
-    // Simular uma atualização de dados
     setTimeout(() => {
       this.shuffleItems();
       event.target.complete();
@@ -227,12 +241,10 @@ export class GostosPage implements OnInit {
   }
   
   onCategoryChange() {
-    // Quando a categoria muda, fazemos scroll para o topo
     if (this.lastSelectedCategory !== this.selectedCategory) {
       this.content.scrollToTop(300);
       this.lastSelectedCategory = this.selectedCategory;
       
-      // Reset o item expandido quando mudar de categoria
       if (this.expandedItem) {
         this.expandedItem.expanded = false;
         this.expandedItem = null;
@@ -258,13 +270,46 @@ export class GostosPage implements OnInit {
       animation.play();
     }
     
-    await this.presentToast(
-      item.favorite 
-        ? `${item.title} adicionado aos favoritos!` 
-        : `${item.title} removido dos favoritos!`
-    );
+    // Determinar a categoria do item
+    let category = 'convivio';
+    if (this.gastronomia.includes(item)) {
+      category = 'gastronomia';
+    } else if (this.desporto.includes(item)) {
+      category = 'desporto';
+    }
     
+    if (item.favorite) {
+      // Adicionar ao serviço de favoritos
+      this.favoritesService.addFavorite({
+        id: item.title,
+        title: item.title,
+        subtitle: item.subtitle,
+        img: item.img,
+        description: item.description,
+        source: 'gostos',
+        category: category
+      });
+      await this.presentToast(`${item.title} adicionado aos favoritos!`);
+    } else {
+      // Remover do serviço de favoritos
+      this.favoritesService.removeFavorite(item.title, 'gostos');
+      await this.presentToast(`${item.title} removido dos favoritos!`);
+    }
+    
+    // Salvar os favoritos também no formato antigo para compatibilidade
     this.saveFavorites();
+  }
+  
+  toggleFavorites() {
+    this.showFavorites = !this.showFavorites;
+    
+    if (this.showFavorites) {
+      this.presentToast('Visualizando seus favoritos');
+    } else {
+      this.presentToast('Voltando para gostos');
+    }
+    
+    this.content.scrollToTop(500);
   }
   
   private saveFavorites() {
@@ -284,7 +329,6 @@ export class GostosPage implements OnInit {
     try {
       const favorites = JSON.parse(savedFavorites);
       
-      // Atualizar status de favoritos para cada categoria
       if (favorites.convivio) {
         favorites.convivio.forEach((fav: {title: string, favorite: boolean}) => {
           const item = this.convivio.find(i => i.title === fav.title);
@@ -311,7 +355,6 @@ export class GostosPage implements OnInit {
   }
   
   private shuffleItems() {
-    // Fisher-Yates shuffle algorithm
     const shuffle = (array: any[]) => {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -340,5 +383,23 @@ export class GostosPage implements OnInit {
     });
     
     await toast.present();
+  }
+
+  private syncFavoritesDetails() {
+    const allItems = [...this.convivio, ...this.gastronomia, ...this.desporto];
+    this.favoritesService.updateFavoriteDetails(allItems, 'gostos');
+  }
+
+  private updateLocalFavoritesFromService() {
+    // Percorrer todos os itens e atualizar o status de favorito
+    const updateItems = (items: Item[], category: string) => {
+      items.forEach(item => {
+        item.favorite = this.favoritesService.isFavorite(item.title, 'gostos');
+      });
+    };
+    
+    updateItems(this.convivio, 'convivio');
+    updateItems(this.gastronomia, 'gastronomia');
+    updateItems(this.desporto, 'desporto');
   }
 }

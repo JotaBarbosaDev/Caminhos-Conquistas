@@ -6,7 +6,6 @@ import {AppComponent} from "./app.component";
 import {AppRoutingModule} from "./app-routing.module";
 import {DetailModalComponent} from "./components/detail-modal/detail-modal.component";
 
-
 @NgModule({
   declarations: [AppComponent, DetailModalComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule],

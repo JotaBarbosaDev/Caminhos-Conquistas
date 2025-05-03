@@ -85,31 +85,35 @@
 
 // Estilo para o mapa
 .map-container {
-  margin-bottom: 24px;
+  margin: 10px 0 24px;
+  padding: 10px;
+  background-color: var(--ion-color-light);
+  border-radius: 10px;
   
   .page-title {
-    font-size: 24px;
-    font-weight: 700;
+    font-size: 22px;
+    font-weight: 600;
     margin-bottom: 16px;
-    color: var(--ion-color-dark);
+    color: var(--ion-color-primary);
   }
   
   .map-frame {
     position: relative;
-    border-radius: 16px;
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
     
-    .region-map {
+    .leaflet-map {
+      height: 400px;
       width: 100%;
-      height: 300px;
-      object-fit: cover;
+      z-index: 1; /* Garantir que o mapa fique acima de outros elementos */
     }
     
     .map-legend {
       position: absolute;
       bottom: 16px;
       left: 16px;
+      z-index: 2; /* Garantir que a legenda fique sobre o mapa */
       background: rgba(255, 255, 255, 0.9);
       border-radius: 8px;
       padding: 12px;
@@ -125,21 +129,24 @@
         }
         
         .legend-marker {
-          width: 12px;
-          height: 12px;
-          border-radius: 50%;
+          width: 15px;
+          height: 15px;
           margin-right: 8px;
+          border-radius: 3px;
           
           &.district {
-            background-color: var(--ion-color-primary);
+            background-color: rgba(56, 128, 255, 0.2); // Cor primária do Ionic
+            border: 1px solid rgba(56, 128, 255, 0.5);
           }
           
           &.municipality {
-            background-color: var(--ion-color-success);
+            background-color: rgba(45, 211, 111, 0.2); // Cor success do Ionic
+            border: 1px solid rgba(45, 211, 111, 0.5);
           }
           
           &.parish {
-            background-color: var(--ion-color-tertiary);
+            background-color: rgba(82, 96, 255, 0.2); // Cor terciária do Ionic
+            border: 1px solid rgba(82, 96, 255, 0.5);
           }
         }
         
@@ -149,6 +156,35 @@
         }
       }
     }
+  }
+}
+
+/* Estilos específicos do Leaflet */
+:host ::ng-deep {
+  .leaflet-popup-content-wrapper {
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+  }
+  
+  .leaflet-popup-content {
+    margin: 10px 12px;
+    line-height: 1.5;
+    
+    strong {
+      display: block;
+      color: var(--ion-color-dark);
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    
+    small {
+      color: var(--ion-color-medium);
+      font-size: 12px;
+    }
+  }
+  
+  .custom-marker {
+    border-radius: 50%;
   }
 }
 
@@ -228,6 +264,129 @@ ion-fab-button {
   opacity: 0.9;
   
   &:hover {
+    opacity: 1;
+  }
+}
+
+/* Estilos para a seção de favoritos */
+.favorites-container {
+  margin-bottom: 2rem;
+}
+
+.empty-favorites {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  text-align: center;
+  background: var(--ion-color-light);
+  border-radius: 12px;
+  margin: 1rem 0;
+  
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+  
+  h3 {
+    margin: 0 0 0.5rem;
+    font-weight: 600;
+  }
+  
+  p {
+    margin: 0 0 1.5rem;
+    color: var(--ion-color-medium);
+  }
+}
+
+.favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+  margin-top: 1rem;
+}
+
+.favorite-card {
+  margin: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &:active {
+    transform: scale(0.98);
+  }
+  
+  .img-container {
+    position: relative;
+    height: 180px;
+    overflow: hidden;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .favorite-icon {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      color: var(--ion-color-danger);
+      font-size: 22px;
+      padding: 6px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 50%;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  ion-card-header {
+    padding-bottom: 8px;
+  }
+  
+  ion-card-title {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  ion-card-subtitle {
+    text-transform: none;
+    font-size: 14px;
+  }
+  
+  .favorite-description {
+    color: var(--ion-color-medium);
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* Animação para exibir itens com fade-in */
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-in-out;
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  from {
+    opacity: 0;
+  }
+  to {
     opacity: 1;
   }
 }

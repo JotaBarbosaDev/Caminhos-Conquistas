@@ -1,11 +1,17 @@
-import {NgModule} from "@angular/core";
-import {CommonModule} from "@angular/common";
-import {IonicModule} from "@ionic/angular";
-import {TerraPage} from "./terra.page";
-import {TerraPageRoutingModule} from "./terra-routing.module";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { TerraPage } from './terra.page';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: TerraPage
+  }
+];
 
 @NgModule({
-  imports: [CommonModule, IonicModule, TerraPageRoutingModule],
-  declarations: [TerraPage],
+  imports: [
+    RouterModule.forChild(routes)
+  ]
 })
 export class TerraPageModule {}

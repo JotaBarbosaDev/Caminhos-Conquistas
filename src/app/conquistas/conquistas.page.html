@@ -1,177 +1,168 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar color="primary" class="header-toolbar">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/tabs/conquistas"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Conquistas</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="toggleViewMode()">
-        <ion-icon [name]="viewMode === 'cards' ? 'grid-outline' : 'card-outline'"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<!-- Usando o novo componente de cabeçalho com favoritos -->
+<app-header-with-favorites 
+  title="Conquistas" 
+  [showingFavorites]="showFavorites"
+  [onToggleFavorites]="toggleFavorites.bind(this)">
+</app-header-with-favorites>
 
 <ion-content class="ion-padding">
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Puxe para atualizar" refreshingSpinner="circles"></ion-refresher-content>
   </ion-refresher>
 
-  <div class="intro-section animate__animated animate__fadeIn">
-    <h1 class="page-title">Minhas Conquistas</h1>
-    <p class="page-subtitle">Viagens, certificações e momentos especiais</p>
-    
-    <div class="achievement-summary">
-      <div class="summary-item">
-        <div class="summary-circle">
-          <ion-icon name="airplane-outline"></ion-icon>
-          <span>{{ viagens.length }}</span>
+  <!-- Componente de favoritos (visível quando showFavorites é true) -->
+  <app-favorites *ngIf="showFavorites"></app-favorites>
+
+  <!-- Conteúdo normal da página (visível quando showFavorites é false) -->
+  <div *ngIf="!showFavorites">
+    <div class="intro-section animate__animated animate__fadeIn">
+      <h1 class="page-title">Minhas Conquistas</h1>
+      <p class="page-subtitle">Viagens, certificações e momentos especiais</p>
+      
+      <div class="achievement-summary">
+        <div class="summary-item">
+          <div class="summary-circle">
+            <ion-icon name="airplane-outline"></ion-icon>
+            <span>{{ viagens.length }}</span>
+          </div>
+          <p>Viagens</p>
         </div>
-        <p>Viagens</p>
-      </div>
-      <div class="summary-item">
-        <div class="summary-circle">
-          <ion-icon name="school-outline"></ion-icon>
-          <span>{{ cursos.length }}</span>
+        <div class="summary-item">
+          <div class="summary-circle">
+            <ion-icon name="school-outline"></ion-icon>
+            <span>{{ cursos.length }}</span>
+          </div>
+          <p>Cursos</p>
         </div>
-        <p>Cursos</p>
-      </div>
-      <div class="summary-item">
-        <div class="summary-circle">
-          <ion-icon name="trophy-outline"></ion-icon>
-          <span>{{ viagens.length + cursos.length }}</span>
+        <div class="summary-item">
+          <div class="summary-circle">
+            <ion-icon name="trophy-outline"></ion-icon>
+            <span>{{ viagens.length + cursos.length }}</span>
+          </div>
+          <p>Total</p>
         </div>
-        <p>Total</p>
       </div>
     </div>
-  </div>
 
-  <!-- Filtro por categoria -->
-  <ion-segment [(ngModel)]="selectedCategory" 
-              (ionChange)="filterItems()" 
-              color="primary" 
-              mode="ios" 
-              class="category-segment animate__animated animate__fadeIn">
-    <ion-segment-button value="all">
-      <ion-icon name="albums-outline"></ion-icon>
-      <ion-label>Todos</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="viagens">
-      <ion-icon name="airplane-outline"></ion-icon>
-      <ion-label>Viagens</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="cursos">
-      <ion-icon name="school-outline"></ion-icon>
-      <ion-label>Cursos</ion-label>
-    </ion-segment-button>
-  </ion-segment>
-
-  <!-- Modo de visualização em cards -->
-  <div class="achievements-container" *ngIf="viewMode === 'cards'">
-    <!-- Título da seção (Viagens) -->
-    <div class="section-header" *ngIf="showViagens()">
-      <h2 class="section-title">
+    <!-- Filtro por categoria -->
+    <ion-segment [(ngModel)]="selectedCategory" 
+                (ionChange)="filterItems()" 
+                color="primary" 
+                mode="ios" 
+                class="category-segment animate__animated animate__fadeIn">
+      <ion-segment-button value="all">
+        <ion-icon name="albums-outline"></ion-icon>
+        <ion-label>Todos</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="viagens">
         <ion-icon name="airplane-outline"></ion-icon>
-        Viagens
-      </h2>
-      <span class="section-count">{{ filteredViagens.length }}</span>
-    </div>
-
-    <!-- Cards de Viagens -->
-    <div class="achievement-cards" *ngIf="showViagens()">
-      <ion-card *ngFor="let item of filteredViagens" class="achievement-card animate__animated animate__fadeIn" (click)="openDetails(item)">
-        <div class="img-container">
-          <img src="assets/images/{{ item.img }}" alt="{{ item.title }}" />
-          <div class="overlay-gradient"></div>
-          <div class="achievement-date">
-            <ion-icon name="calendar-outline"></ion-icon>
-            {{ item.date || '2023' }}
-          </div>
-        </div>
-        <ion-card-header>
-          <ion-card-title>{{ item.title }}</ion-card-title>
-          <ion-card-subtitle>{{ item.subtitle }}</ion-card-subtitle>
-        </ion-card-header>
-        <ion-card-content>
-          <p class="achievement-description">{{ item.description | slice:0:80 }}{{ item.description.length > 80 ? '...' : '' }}</p>
-          <ion-button fill="clear" size="small" class="details-button">
-            Ver detalhes
-            <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
-          </ion-button>
-        </ion-card-content>
-      </ion-card>
-    </div>
-
-    <!-- Título da seção (Cursos) -->
-    <div class="section-header" *ngIf="showCursos()">
-      <h2 class="section-title">
+        <ion-label>Viagens</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="cursos">
         <ion-icon name="school-outline"></ion-icon>
-        Cursos
-      </h2>
-      <span class="section-count">{{ filteredCursos.length }}</span>
-    </div>
+        <ion-label>Cursos</ion-label>
+      </ion-segment-button>
+    </ion-segment>
 
-    <!-- Cards de Cursos -->
-    <div class="achievement-cards" *ngIf="showCursos()">
-      <ion-card *ngFor="let item of filteredCursos" class="achievement-card animate__animated animate__fadeIn" (click)="openDetails(item)">
-        <div class="img-container">
-          <img src="assets/images/{{ item.img }}" alt="{{ item.title }}" />
-          <div class="overlay-gradient"></div>
-          <div class="achievement-badge" *ngIf="item.completed">
-            <ion-icon name="checkmark-circle"></ion-icon>
-          </div>
-        </div>
-        <ion-card-header>
-          <ion-card-title>{{ item.title }}</ion-card-title>
-          <ion-card-subtitle>{{ item.subtitle }}</ion-card-subtitle>
-        </ion-card-header>
-        <ion-card-content>
-          <p class="achievement-description">{{ item.description | slice:0:80 }}{{ item.description.length > 80 ? '...' : '' }}</p>
-          <div class="course-progress">
-            <span class="progress-text">{{ item.progress || '100' }}% concluído</span>
-            <ion-progress-bar [value]="(item.progress || 100) / 100" color="success"></ion-progress-bar>
-          </div>
-          <ion-button fill="clear" size="small" class="details-button">
-            Ver certificado
-            <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
-          </ion-button>
-        </ion-card-content>
-      </ion-card>
-    </div>
-  </div>
+    <!-- Modo de visualização em cards -->
+    <div class="achievements-container" *ngIf="viewMode === 'cards'">
+      <!-- Título da seção (Viagens) -->
+      <div class="section-header" *ngIf="showViagens()">
+        <h2 class="section-title">
+          <ion-icon name="airplane-outline"></ion-icon>
+          Viagens
+        </h2>
+        <span class="section-count">{{ filteredViagens.length }}</span>
+      </div>
 
-  <!-- Modo de visualização em grade -->
-  <div class="achievements-grid" *ngIf="viewMode === 'grid'">
-    <ion-grid>
-      <ion-row>
-        <ion-col size="6" size-md="4" size-lg="3" *ngFor="let item of filteredItems">
-          <ion-card class="grid-card animate__animated animate__fadeIn" (click)="openDetails(item)">
-            <div class="img-container">
-              <img src="assets/images/{{ item.img }}" alt="{{ item.title }}" />
-              <div class="overlay-gradient"></div>
-              <div class="category-badge" [ngClass]="item.type === 'viagem' ? 'travel-badge' : 'course-badge'">
-                <ion-icon [name]="item.type === 'viagem' ? 'airplane-outline' : 'school-outline'"></ion-icon>
-              </div>
+      <!-- Cards de Viagens -->
+      <div class="achievement-cards" *ngIf="showViagens()">
+        <ion-card *ngFor="let item of filteredViagens" class="achievement-card animate__animated animate__fadeIn" (click)="openDetails(item)">
+          <div class="img-container">
+            <img src="assets/images/{{ item.img }}" alt="{{ item.title }}" />
+            <div class="overlay-gradient"></div>
+            <div class="achievement-date">
+              <ion-icon name="calendar-outline"></ion-icon>
+              {{ item.date || '2023' }}
             </div>
-            <ion-card-header>
-              <ion-card-title>{{ item.title }}</ion-card-title>
-              <ion-card-subtitle>{{ item.subtitle }}</ion-card-subtitle>
-            </ion-card-header>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </div>
+          </div>
+          <ion-card-header>
+            <ion-card-title>{{ item.title }}</ion-card-title>
+            <ion-card-subtitle>{{ item.subtitle }}</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <p class="achievement-description">{{ item.description | slice:0:80 }}{{ item.description.length > 80 ? '...' : '' }}</p>
+          </ion-card-content>
+        </ion-card>
+      </div>
 
-  <!-- Estado vazio -->
-  <div class="empty-state" *ngIf="(selectedCategory === 'all' && filteredItems.length === 0) || 
-                                  (selectedCategory === 'viagens' && filteredViagens.length === 0) || 
-                                  (selectedCategory === 'cursos' && filteredCursos.length === 0)">
-    <ion-icon name="trophy-outline" size="large"></ion-icon>
-    <h3>Nenhuma conquista encontrada</h3>
-    <p>As novas conquistas aparecerão aqui</p>
-    <ion-button fill="outline" (click)="resetFilters()">
-      Mostrar todas
-    </ion-button>
+      <!-- Título da seção (Cursos) -->
+      <div class="section-header" *ngIf="showCursos()">
+        <h2 class="section-title">
+          <ion-icon name="school-outline"></ion-icon>
+          Cursos
+        </h2>
+        <span class="section-count">{{ filteredCursos.length }}</span>
+      </div>
+
+      <!-- Cards de Cursos -->
+      <div class="achievement-cards" *ngIf="showCursos()">
+        <ion-card *ngFor="let item of filteredCursos" class="achievement-card animate__animated animate__fadeIn" (click)="openDetails(item)">
+          <div class="img-container">
+            <img src="assets/images/{{ item.img }}" alt="{{ item.title }}" />
+            <div class="overlay-gradient"></div>
+            <div class="achievement-badge" *ngIf="item.completed">
+              <ion-icon name="checkmark-circle"></ion-icon>
+            </div>
+          </div>
+          <ion-card-header>
+            <ion-card-title>{{ item.title }}</ion-card-title>
+            <ion-card-subtitle>{{ item.subtitle }}</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <p class="achievement-description">{{ item.description | slice:0:80 }}{{ item.description.length > 80 ? '...' : '' }}</p>
+            <div class="course-progress">
+              <span class="progress-text">{{ item.progress || '100' }}% concluído</span>
+              <ion-progress-bar [value]="(item.progress || 100) / 100" color="success"></ion-progress-bar>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </div>
+    </div>
+
+    <!-- Modo de visualização em grade -->
+    <div class="achievements-grid" *ngIf="viewMode === 'grid'">
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6" size-md="4" size-lg="3" *ngFor="let item of filteredItems">
+            <ion-card class="grid-card animate__animated animate__fadeIn" (click)="openDetails(item)">
+              <div class="img-container">
+                <img src="assets/images/{{ item.img }}" alt="{{ item.title }}" />
+                <div class="overlay-gradient"></div>
+                <div class="category-badge" [ngClass]="item.type === 'viagem' ? 'travel-badge' : 'course-badge'">
+                  <ion-icon [name]="item.type === 'viagem' ? 'airplane-outline' : 'school-outline'"></ion-icon>
+                </div>
+              </div>
+              <ion-card-header>
+                <ion-card-title>{{ item.title }}</ion-card-title>
+                <ion-card-subtitle>{{ item.subtitle }}</ion-card-subtitle>
+              </ion-card-header>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+
+    <!-- Estado vazio -->
+    <div class="empty-state" *ngIf="(selectedCategory === 'all' && filteredItems.length === 0) || 
+                                    (selectedCategory === 'viagens' && filteredViagens.length === 0) || 
+                                    (selectedCategory === 'cursos' && filteredCursos.length === 0)">
+      <ion-icon name="trophy-outline" size="large"></ion-icon>
+      <h3>Nenhuma conquista encontrada</h3>
+      <p>As novas conquistas aparecerão aqui</p>
+      <ion-button fill="outline" (click)="resetFilters()">
+        Mostrar todas
+      </ion-button>
+    </div>
   </div>
 </ion-content>

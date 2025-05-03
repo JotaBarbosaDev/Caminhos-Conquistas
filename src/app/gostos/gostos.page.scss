@@ -7,91 +7,79 @@
   }
 }
 
-// Seção de introdução
+// Estilos da seção introdutória
 .intro-section {
-  margin-top: 16px;
-  
+  margin-top: 1rem;
   h1 {
-    font-size: 28px;
+    font-size: 1.8rem;
     font-weight: 700;
-    color: var(--ion-color-dark);
+    color: var(--ion-color-primary);
   }
-  
   p {
+    font-size: 1rem;
     color: var(--ion-color-medium);
     margin-top: 4px;
-    font-size: 16px;
   }
 }
 
-// Segmentos de categoria
+// Estilos do segmento de categorias
 .category-segment {
-  --background: rgba(var(--ion-color-primary-rgb), 0.05);
-  border-radius: 12px;
-  padding: 4px;
-  
+  margin-top: 1rem;
+  border-radius: 8px;
+  --background: var(--ion-color-light);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
   .segment-button {
-    --color: var(--ion-color-medium);
-    --color-checked: var(--ion-color-primary);
-    --indicator-color: white;
-    
-    min-height: 44px;
-    font-weight: 500;
-    font-size: 13px;
-    --padding-start: 4px;
-    --padding-end: 4px;
+    text-transform: none;
+    min-height: 45px;
+    --padding-top: 8px;
+    --padding-bottom: 8px;
     
     ion-icon {
       margin-bottom: 4px;
-      font-size: 18px;
+      font-size: 20px;
     }
   }
 }
 
-// Título da categoria
+// Estilos do título da categoria
 .category-heading {
   h2 {
-    font-size: 20px;
+    font-size: 1.4rem;
     font-weight: 600;
-    margin-bottom: 12px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     color: var(--ion-color-dark);
   }
 }
 
-// Cartões em layout vertical
+// Estilos para os cards verticais
 .vertical-cards {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 8px 0;
+  margin-bottom: 24px;
   
   .item-card {
-    width: 100%;
-    margin-right: 0;
-    border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin: 0;
+    border-radius: 12px;
     overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
     
-    &:active {
-      transform: scale(0.97);
-    }
-    
-    // Estilo quando card está expandido
     &.expanded {
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
     }
     
     .img-container {
       position: relative;
-      height: 160px;
+      height: 180px;
       overflow: hidden;
       
       img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        transition: transform 0.5s ease;
       }
       
       .overlay-gradient {
@@ -100,110 +88,82 @@
         left: 0;
         right: 0;
         height: 60%;
-        background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
-      }
-
-      .favorite-icon {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 24px;
-        color: #ff5b71;
-        background: rgba(255, 255, 255, 0.7);
-        border-radius: 50%;
-        padding: 5px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        z-index: 10;
-        animation: pulse 1.5s infinite ease-in-out;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
       }
       
       .favorite-button {
         position: absolute;
-        top: 5px;
-        right: 5px;
-        z-index: 10;
-        --background: rgba(255, 255, 255, 0.7);
+        top: 8px;
+        right: 8px;
+        margin: 0;
         --padding-start: 8px;
         --padding-end: 8px;
+        --padding-top: 8px;
+        --padding-bottom: 8px;
         height: 36px;
+        width: 36px;
+        --background: rgba(255, 255, 255, 0.25);
+        --border-radius: 50%;
         
         .favorite-icon-outline {
           font-size: 20px;
-          color: var(--ion-color-medium);
+          color: white;
         }
       }
       
-      @keyframes pulse {
-        0% { transform: scale(1); }
-        50% { transform: scale(1.1); }
-        100% { transform: scale(1); }
+      .favorite-icon {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        font-size: 24px;
+        color: var(--ion-color-danger);
+        filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
       }
     }
     
     ion-card-header {
-      padding: 12px 16px;
+      padding-bottom: 8px;
       
       ion-card-title {
-        font-size: 18px;
-        font-weight: 600;
-        margin-bottom: 4px;
+        font-size: 1.2rem;
+        font-weight: 700;
       }
       
       ion-card-subtitle {
-        font-size: 14px;
+        font-size: 0.9rem;
         color: var(--ion-color-medium);
       }
     }
     
-    &:hover {
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
-      
-      .img-container img {
-        transform: scale(1.05);
-      }
-    }
-    
-    // Conteúdo expandido
     .expanded-content {
       padding-top: 0;
       
       .item-description {
-        color: var(--ion-color-dark);
-        font-size: 16px;
-        line-height: 1.5;
         margin-bottom: 16px;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        color: var(--ion-color-dark);
       }
       
       .extra-info {
-        background-color: rgba(var(--ion-color-primary-rgb), 0.05);
-        border-radius: 12px;
-        padding: 12px;
-        margin-bottom: 16px;
+        margin: 16px 0;
         
         .info-item {
           display: flex;
           flex-direction: column;
           margin-bottom: 12px;
           
-          &:last-child {
-            margin-bottom: 0;
-          }
-          
           ion-chip {
-            --background: transparent;
-            margin: 0 0 8px 0;
-            padding-left: 0;
             height: 28px;
-            
-            ion-label {
-              font-weight: 600;
-            }
+            --background: transparent;
+            margin-left: 0;
           }
           
           .info-value {
-            font-size: 15px;
+            margin-top: 4px;
+            margin-left: 12px;
+            font-size: 0.9rem;
             color: var(--ion-color-dark);
-            padding-left: 8px;
           }
         }
       }
@@ -211,11 +171,159 @@
       .card-actions {
         display: flex;
         justify-content: flex-start;
-        margin-top: 8px;
+        margin-top: 16px;
         
         ion-button {
-          font-weight: 500;
+          margin: 0;
+          font-size: 14px;
         }
+      }
+    }
+  }
+}
+
+// Container de cartões
+.cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.item-card {
+  margin: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  
+  &.expanded {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+  }
+  
+  .card-header {
+    position: relative;
+    height: 150px;
+    overflow: hidden;
+  }
+  
+  .card-image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+  
+  .category-tag {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  
+  .favorite-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    --background: rgba(255, 255, 255, 0.6);
+    --border-radius: 50%;
+    --padding-start: 8px;
+    --padding-end: 8px;
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+    margin: 0;
+    height: auto;
+    width: auto;
+    
+    .favorite-icon {
+      font-size: 18px;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+  }
+  
+  ion-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  
+  ion-card-subtitle {
+    font-size: 14px;
+    color: var(--ion-color-medium);
+    text-transform: none;
+  }
+  
+  ion-card-content {
+    padding-bottom: 16px;
+    
+    p {
+      margin-top: 8px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--ion-color-dark-shade);
+    }
+    
+    .extra-content {
+      animation: fadeIn 0.3s forwards;
+    }
+    
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--ion-color-light-shade);
+      margin: 16px 0;
+    }
+    
+    .extra-info {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+      
+      .info-item {
+        display: flex;
+        align-items: center;
+        
+        .info-icon {
+          font-size: 20px;
+          margin-right: 12px;
+          color: var(--ion-color-primary);
+        }
+        
+        .info-text {
+          display: flex;
+          flex-direction: column;
+          
+          .info-label {
+            font-size: 12px;
+            color: var(--ion-color-medium);
+          }
+          
+          .info-value {
+            font-size: 14px;
+            color: var(--ion-color-dark);
+            font-weight: 500;
+          }
+        }
+      }
+    }
+    
+    .expand-button {
+      margin-top: 8px;
+      --color: var(--ion-color-primary);
+      font-weight: 500;
+      font-size: 13px;
+      text-transform: none;
+      
+      ion-icon {
+        font-size: 16px;
+        transition: transform 0.3s ease;
       }
     }
   }
@@ -227,17 +335,16 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
-  color: var(--ion-color-medium);
+  padding: 3rem 1rem;
   
   ion-icon {
-    font-size: 48px;
-    margin-bottom: 16px;
-    opacity: 0.7;
+    font-size: 3rem;
+    color: var(--ion-color-medium);
+    margin-bottom: 1rem;
   }
   
   p {
-    font-size: 16px;
+    color: var(--ion-color-medium);
     text-align: center;
   }
 }
@@ -246,7 +353,7 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(-5px);
   }
   to {
     opacity: 1;
@@ -255,9 +362,14 @@
 }
 
 .animate__animated {
-  animation-duration: 0.5s;
+  animation-duration: 0.3s;
 }
 
-.animate__fadeIn {
-  animation-name: fadeIn;
+// Responsividade
+@media (min-width: 768px) {
+  .vertical-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
 }

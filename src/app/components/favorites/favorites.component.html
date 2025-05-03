@@ -1,0 +1,51 @@
+<div class="favorites-container animate-fade-in">
+  <div class="section-header">
+    <div class="title-container">
+      <ion-icon name="heart" color="danger"></ion-icon>
+      <h2 class="section-title">Meus Favoritos</h2>
+    </div>
+    <ion-badge color="danger" class="region-badge">Favoritos</ion-badge>
+  </div>
+  
+  <div class="region-description" *ngIf="favoriteItems.length > 0">
+    <p>Aqui você encontra todos os seus itens favoritos de diferentes seções do aplicativo.</p>
+  </div>
+
+  <!-- Mensagem quando não há favoritos -->
+  <div *ngIf="favoriteItems.length === 0" class="empty-favorites">
+    <ion-icon name="heart-outline" color="medium" class="empty-icon"></ion-icon>
+    <h3>Nenhum favorito adicionado</h3>
+    <p>Você ainda não adicionou nenhum item aos seus favoritos.</p>
+    <ion-button expand="block" fill="outline" (click)="toggleFavorites()">
+      Voltar
+    </ion-button>
+  </div>
+
+  <!-- Lista de favoritos -->
+  <div *ngIf="favoriteItems.length > 0" class="favorites-grid">
+    <ion-card *ngFor="let item of favoriteItems" (click)="openDetails(item)" class="favorite-card animate-fade-in">
+      <div class="img-container">
+        <!-- Corrigido o caminho da imagem para usar a estrutura correta -->
+        <img [src]="'assets/images/' + item.img" alt="{{ item.title }}" onerror="this.src='assets/images/placeholder.jpg'"/>
+        <div class="overlay-gradient"></div>
+        <ion-icon name="heart" class="favorite-icon"></ion-icon>
+      </div>
+      <ion-card-header>
+        <ion-card-title>{{ item.title }}</ion-card-title>
+        <ion-card-subtitle>{{ item.subtitle }}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <p class="favorite-description">{{ item.description || 'Sem descrição disponível' }}</p>
+        
+        <div class="source-badge" [ngClass]="{'gostos': item.source === 'gostos', 'terra': item.source === 'terra', 'explorar': item.source === 'explorar'}">
+          {{ item.source === 'terra' ? 'Terra' : (item.source === 'gostos' ? 'Gostos' : 'Explorar') }}
+        </div>
+        
+        <ion-button fill="clear" size="small" class="details-button">
+          Mostrar mais
+          <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</div>

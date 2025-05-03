@@ -1,36 +1,48 @@
-import {Component, OnInit} from "@angular/core";
-import {ToastController, RefresherCustomEvent} from "@ionic/angular";
-import {ModalService} from "../services/modal.service";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { IonContent, RefresherCustomEvent, ToastController, IonicModule } from '@ionic/angular';
+import { ModalService } from '../services/modal.service';
+import { FavoritesService } from '../services/favorites.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { FavoritesComponent } from '../components/favorites/favorites.component';
+import { HeaderWithFavoritesComponent } from '../components/favorites/header.component';
 
 interface Event {
   id?: string;
   title: string;
-  location: string;
-  date: string;
+  subtitle?: string;
+  description: string;
   img: string;
-  details: string;
-  description?: string; 
-  category?: string;
-  rating?: number;
-  hours?: string;
+  date: string;
+  location: string;
+  category: string;
   price?: string;
-  actionText?: string;
-  mapUrl?: string;
+  link?: string;
+  coordinates?: { lat: number, lng: number };
 }
+
 @Component({
-  selector: "app-explorar",
-  templateUrl: "./explorar.page.html",
-  styleUrls: ["./explorar.page.scss"],
-  standalone: false,
+  selector: 'app-explorar',
+  templateUrl: './explorar.page.html',
+  styleUrls: ['./explorar.page.scss'],
+  standalone: true,
+  imports: [
+    CommonModule, 
+    IonicModule, 
+    FormsModule,
+    FavoritesComponent,
+    HeaderWithFavoritesComponent
+  ]
 })
 export class ExplorarPage implements OnInit {
+  @ViewChild(IonContent) content!: IonContent;
+
   events: Event[] = [
     {
       title: "Romaria da Agonia",
       location: "Viana do Castelo",
       date: "Agosto",
-      img: "agonia.jpg",
-      details: "Festa tradicional com procissões e música.",
+      img: "../../assets/images/romariaagonia.jpg",
       description:
         "A Romaria da Agonia é uma festa religiosa que celebra a devoção à Nossa Senhora da Agonia, com procissões, danças e trajes típicos. É um evento vibrante que atrai visitantes de todo o país.",
       category: "cultural"
@@ -39,8 +51,7 @@ export class ExplorarPage implements OnInit {
       title: "Feiras Novas",
       location: "Ponte de Lima",
       date: "Setembro",
-      img: "feirasnovas.jpg",
-      details: "Festival com tasquinhas e concertos.",
+      img: "../../assets/images/feirasnovas.jpg",
       description:
         "As Feiras Novas são uma celebração popular que inclui música, danças e gastronomia local. É uma oportunidade para experimentar a cultura e tradições da região.",
       category: "gastronomia"
@@ -49,8 +60,7 @@ export class ExplorarPage implements OnInit {
       title: "Caminho de Santiago",
       location: "Freixo",
       date: "Todo o ano",
-      img: "caminho.jpg",
-      details: "Percurso para peregrinos com paisagens históricas.",
+      img: "../../assets/images/caminhostiago.jpeg",
       description:
         "O Caminho de Santiago é uma rota histórica que leva os peregrinos a Santiago de Compostela. Atravessa paisagens deslumbrantes e locais históricos, oferecendo uma experiência espiritual e cultural.",
       category: "desporto"
@@ -59,53 +69,43 @@ export class ExplorarPage implements OnInit {
       title: "Museu do Traje",
       location: "Ponte de Lima",
       date: "Diariamente",
-      img: "museu-traje.jpg",
-      details: "Exposições de trajes regionais.",
+      img: "../../assets/images/museutraje.jpg",
       description:
         "O Museu do Traje apresenta a rica herança cultural da região através de trajes tradicionais. As exposições oferecem uma visão fascinante da história e costumes locais.",
       category: "cultural"
     },
   ];
 
-  // Propriedades para controle de visualização e filtros
-  viewType: 'grid' | 'list' = 'grid';
-  searchTerm: string = '';
-  selectedCategory: string = 'all';
+  // Nova propriedade para armazenar eventos filtrados
   filteredEvents: Event[] = [];
-  favorites: string[] = [];
 
-  constructor(private modalService: ModalService, private toastController: ToastController) {}
-  
+  viewType: 'grid' | 'list' = 'grid';
+  selectedCategory: 'all' | 'cultural' | 'desporto' | 'gastronomia' = 'all';
+  searchTerm: string = '';
+  showFavorites: boolean = false;
+
+  constructor(
+    private modalService: ModalService,
+    private toastController: ToastController,
+    private favoritesService: FavoritesService
+  ) {}
+
   ngOnInit() {
-    // Inicializa a lista filtrada com todos os eventos
-    this.filteredEvents = [...this.events];
-    
-    // Carregar favoritos salvos no localStorage
-    try {
-      const savedFavorites = localStorage.getItem('favorites');
-      if (savedFavorites) {
-        this.favorites = JSON.parse(savedFavorites);
-      }
-    } catch (e) {
-      console.error('Erro ao carregar favoritos:', e);
-      this.favorites = [];
-    }
+    this.filterEvents();
+    this.syncFavoritesDetails();
   }
 
-  // Alterna entre visualização em grade e lista
   toggleView() {
     this.viewType = this.viewType === 'grid' ? 'list' : 'grid';
   }
 
-  // Filtra eventos com base na pesquisa e categoria selecionada
   filterEvents() {
+    // Em vez de modificar o array original, criamos um novo array filtrado
     this.filteredEvents = this.events.filter(event => {
-      // Filtro por termo de pesquisa
       const matchesSearch = !this.searchTerm || 
         event.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         event.location.toLowerCase().includes(this.searchTerm.toLowerCase());
 
-      // Filtro por categoria
       const matchesCategory = this.selectedCategory === 'all' || 
         event.category === this.selectedCategory;
 
@@ -113,115 +113,134 @@ export class ExplorarPage implements OnInit {
     });
   }
 
-  // Reseta os filtros para o estado inicial
   resetFilters() {
     this.searchTerm = '';
     this.selectedCategory = 'all';
-    this.filteredEvents = [...this.events];
+    this.filterEvents();
   }
 
-  // Formata a data do evento para exibição
   formatEventDate(date: string): string {
     return date;
   }
 
-  async openDetails(item: Event) {
-    // Usar o título como ID se não existir um ID específico
-    const itemId = item.id || item.title;
-    
-    // Preparar informações extras
-    const extraInfo = [];
-    
-    // Adicionar categoria se disponível
-    if (item.category) {
-      extraInfo.push({
+  toggleFavorites() {
+    this.showFavorites = !this.showFavorites;
+
+    if (this.showFavorites) {
+      this.presentToast('Visualizando seus favoritos');
+    } else {
+      this.presentToast('Voltando para explorar');
+    }
+
+    if (this.content) {
+      this.content.scrollToTop(500);
+    }
+  }
+
+  isFavorite(id: string): boolean {
+    return this.favoritesService.isFavorite(id, 'explorar');
+  }
+
+  toggleFavorite(id: string, title: string) {
+    if (this.isFavorite(id)) {
+      this.favoritesService.removeFavorite(id, 'explorar');
+      this.presentToast(`Removido dos favoritos`);
+    } else {
+      const event = this.events.find(e => e.id === id || e.title === title);
+
+      if (event) {
+        this.favoritesService.addFavorite({
+          id: id || event.title,
+          title: event.title,
+          subtitle: event.subtitle || event.category,
+          img: event.img,
+          description: event.description,
+          location: event.location,
+          coordinates: event.coordinates,
+          source: 'explorar'
+        });
+        this.presentToast(`Adicionado aos favoritos`);
+      }
+    }
+  }
+
+  syncFavoritesDetails() {
+    this.favoritesService.updateFavoriteDetails(this.events, 'explorar');
+  }
+
+  async openDetails(event: Event) {
+    const eventId = event.id || event.title;
+    const isFavorite = this.isFavorite(eventId);
+
+    const mapUrl = event.coordinates ? 
+      `https://www.google.com/maps?q=${event.coordinates.lat},${event.coordinates.lng}` : 
+      '';
+
+    let extraInfo = [
+      {
+        icon: 'calendar-outline',
+        label: 'Data',
+        value: this.formatEventDate(event.date)
+      },
+      {
+        icon: 'location-outline',
+        label: 'Local',
+        value: event.location
+      },
+      {
         icon: 'pricetag-outline',
         label: 'Categoria',
-        value: item.category
-      });
-    }
-    
-    // Adicionar data
-    extraInfo.push({
-      icon: 'calendar-outline',
-      label: 'Data',
-      value: item.date
-    });
-    
-    // Adicionar avaliação se disponível
-    if (item.rating) {
-      extraInfo.push({
-        icon: 'star-outline',
-        label: 'Avaliação',
-        value: `${item.rating}/5`
-      });
-    }
-    
-    // Adicionar horário se disponível
-    if (item.hours) {
-      extraInfo.push({
-        icon: 'time-outline',
-        label: 'Horário',
-        value: item.hours
-      });
-    }
-    
-    // Adicionar preço se disponível
-    if (item.price) {
+        value: event.category
+      }
+    ];
+
+    if (event.price) {
       extraInfo.push({
         icon: 'cash-outline',
-        label: 'Preço médio',
-        value: item.price
+        label: 'Preço',
+        value: event.price
       });
     }
-    
-    // Usar o serviço de modal para abrir o modal de detalhes
+
     const { data } = await this.modalService.openDetailModal({
-      id: itemId,
-      title: item.title,
-      subtitle: item.category || 'Evento',
-      img: item.img,
-      description: item.description || item.details,
-      location: item.location,
-      mapUrl: item.mapUrl,
+      id: eventId,
+      title: event.title,
+      subtitle: event.subtitle || event.category,
+      img: event.img,
+      description: event.description,
+      location: event.location,
+      coordinates: event.coordinates,
+      mapUrl: mapUrl,
       extraInfo: extraInfo,
-      mainActionText: item.actionText || 'Ver localização',
-      isFavorite: this.isFavorite(itemId),
-      favorite: this.isFavorite(itemId),
-      onToggleFavorite: () => this.toggleFavorite(itemId)
+      mainActionText: event.link ? 'Visitar site' : (mapUrl ? 'Ver no mapa' : undefined),
+      actionUrl: event.link || mapUrl,
+      isFavorite: isFavorite,
+      favorite: isFavorite,
+      onToggleFavorite: () => this.toggleFavorite(eventId, event.title)
     });
-    
-    // Atualizar favoritos se necessário
+
     if (data && data.favoriteChanged) {
-      this.toggleFavorite(itemId);
-      
-      // Mostrar uma mensagem ao usuário
-      const toast = await this.toastController.create({
-        message: this.isFavorite(itemId) ? 'Adicionado aos favoritos' : 'Removido dos favoritos',
-        duration: 2000,
-        position: 'bottom'
-      });
-      
-      await toast.present();
+      this.toggleFavorite(eventId, event.title);
     }
   }
-  
-  isFavorite(id: string): boolean {
-    return this.favorites.includes(id);
+
+  async presentToast(message: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      position: 'bottom',
+      color: 'primary',
+      buttons: [
+        {
+          icon: 'close-outline',
+          role: 'cancel'
+        }
+      ]
+    });
+
+    await toast.present();
   }
-  
-  toggleFavorite(id: string) {
-    const index = this.favorites.indexOf(id);
-    if (index >= 0) {
-      this.favorites.splice(index, 1);
-    } else {
-      this.favorites.push(id);
-    }
-    
-    // Atualizar o armazenamento local de favoritos
-    localStorage.setItem('favorites', JSON.stringify(this.favorites));
-  }
-  
+
   doRefresh(event: RefresherCustomEvent) {
     setTimeout(() => {
       event.target.complete();

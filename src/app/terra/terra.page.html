@@ -1,28 +1,27 @@
-<ion-header class="ion-no-border">
-  <ion-toolbar color="primary" class="header-toolbar">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/tabs/terra"></ion-back-button>
-    </ion-buttons>
-    <ion-title>Minha Terra</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="toggleMap()">
-        <ion-icon [name]="showMap ? 'images-outline' : 'map-outline'"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
+<!-- Usando o novo componente de cabeçalho com favoritos -->
+<app-header-with-favorites 
+  title="Minha Terra" 
+  [showingFavorites]="showFavorites"
+  [onToggleFavorites]="toggleFavorites.bind(this)">
+  <ion-button buttons-end (click)="toggleMap()">
+    <ion-icon [name]="showMap ? 'images-outline' : 'map-outline'"></ion-icon>
+  </ion-button>
+</app-header-with-favorites>
 
 <ion-content class="ion-padding">
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Puxe para atualizar" refreshingSpinner="circles"></ion-refresher-content>
   </ion-refresher>
 
-  <!-- Mapa interativo (visível quando toggleMap é true) -->
-  <div *ngIf="showMap" class="map-container animate-fade-in">
+  <!-- Componente de favoritos (visível quando showFavorites é true) -->
+  <app-favorites *ngIf="showFavorites"></app-favorites>
+
+  <!-- Mapa interativo (visível quando toggleMap é true e showFavorites é false) -->
+  <div *ngIf="showMap && !showFavorites" class="map-container animate-fade-in">
     <h2 class="page-title">Mapa da Região</h2>
     <div class="map-frame">
-      <!-- Inserir aqui o mapa (poderia ser uma imagem ou um componente de mapa interativo) -->
-      <img src="assets/img/map-placeholder.jpg" alt="Mapa da região" class="region-map" />
+      <!-- Mapa Leaflet interativo -->
+      <div id="map" class="leaflet-map"></div>
       
       <div class="map-legend">
         <div class="legend-item">
@@ -41,8 +40,8 @@
     </div>
   </div>
 
-  <!-- Conteúdo normal (visível quando toggleMap é false) -->
-  <div *ngIf="!showMap" class="regions-content">
+  <!-- Conteúdo normal (visível quando toggleMap e showFavorites são false) -->
+  <div *ngIf="!showMap && !showFavorites" class="regions-content">
     <!-- Distrito -->
     <div class="region-section animate-fade-in">
       <div class="section-header">
@@ -74,10 +73,7 @@
               <ion-card-subtitle>{{ p.subtitle }}</ion-card-subtitle>
             </ion-card-header>
             <ion-card-content>
-              <ion-button fill="clear" size="small" class="details-button">
-                Ver detalhes
-                <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
-              </ion-button>
+          
             </ion-card-content>
           </ion-card>
         </div>
@@ -115,10 +111,7 @@
               <ion-card-subtitle>{{ p.subtitle }}</ion-card-subtitle>
             </ion-card-header>
             <ion-card-content>
-              <ion-button fill="clear" size="small" class="details-button">
-                Ver detalhes
-                <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
-              </ion-button>
+              
             </ion-card-content>
           </ion-card>
         </div>
@@ -156,10 +149,7 @@
               <ion-card-subtitle>{{ p.subtitle }}</ion-card-subtitle>
             </ion-card-header>
             <ion-card-content>
-              <ion-button fill="clear" size="small" class="details-button">
-                Ver detalhes
-                <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
-              </ion-button>
+              
             </ion-card-content>
           </ion-card>
         </div>

@@ -4,6 +4,11 @@
       <ion-back-button defaultHref="/tabs/gostos"></ion-back-button>
     </ion-buttons>
     <ion-title class="ion-text-center">Meus Gostos</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleFavorites()">
+        <ion-icon [name]="showFavorites ? 'heart' : 'heart-outline'" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -12,81 +17,87 @@
     <ion-refresher-content pullingIcon="chevron-down-circle-outline" pullingText="Puxe para atualizar" refreshingSpinner="circles"></ion-refresher-content>
   </ion-refresher>
 
-  <div class="intro-section ion-margin-bottom">
-    <h1 class="ion-no-margin">Categorias</h1>
-    <p class="ion-no-margin">Explore meus interesses em diferentes áreas</p>
-  </div>
+  <!-- Componente de favoritos (visível quando showFavorites é true) -->
+  <app-favorites *ngIf="showFavorites"></app-favorites>
 
-  <ion-segment [(ngModel)]="selectedCategory" (ionChange)="onCategoryChange()" color="primary" mode="ios" class="category-segment ion-margin-bottom">
-    <ion-segment-button value="conv" class="segment-button">
-      <ion-icon name="people-outline"></ion-icon>
-      <ion-label>Convívio</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="gastr" class="segment-button">
-      <ion-icon name="restaurant-outline"></ion-icon>
-      <ion-label>Gastronomia</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="desp" class="segment-button">
-      <ion-icon name="football-outline"></ion-icon>
-      <ion-label>Desporto</ion-label>
-    </ion-segment-button>
-  </ion-segment>
+  <!-- Conteúdo normal (visível quando showFavorites é false) -->
+  <div *ngIf="!showFavorites">
+    <div class="intro-section ion-margin-bottom">
+      <h1 class="ion-no-margin">Categorias</h1>
+      <p class="ion-no-margin">Explore meus interesses em diferentes áreas</p>
+    </div>
 
-  <div class="category-heading ion-padding-start">
-    <h2>
-      <span *ngIf="selectedCategory === 'conv'">Convívio e Lazer</span>
-      <span *ngIf="selectedCategory === 'gastr'">Gastronomia</span>
-      <span *ngIf="selectedCategory === 'desp'">Desporto</span>
-    </h2>
-  </div>
+    <ion-segment [(ngModel)]="selectedCategory" (ionChange)="onCategoryChange()" color="primary" mode="ios" class="category-segment ion-margin-bottom">
+      <ion-segment-button value="conv" class="segment-button">
+        <ion-icon name="people-outline"></ion-icon>
+        <ion-label>Convívio</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="gastr" class="segment-button">
+        <ion-icon name="restaurant-outline"></ion-icon>
+        <ion-label>Gastronomia</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="desp" class="segment-button">
+        <ion-icon name="football-outline"></ion-icon>
+        <ion-label>Desporto</ion-label>
+      </ion-segment-button>
+    </ion-segment>
 
-  <div class="vertical-cards">
-    <ion-card *ngFor="let i of getItems(selectedCategory)" 
-              (click)="toggleItemExpansion(i)" 
-              class="item-card animate__animated animate__fadeIn" 
-              [ngClass]="{'expanded': i.expanded}"
-              [id]="'card-' + i.title.replace(' ', '-').toLowerCase()">
-      <div class="img-container">
-        <img src="assets/images/{{ i.img }}" alt="{{ i.title }}" />
-        <div class="overlay-gradient"></div>
-        <ion-button *ngIf="!i.favorite" class="favorite-button" fill="clear" (click)="toggleFavorite(i); $event.stopPropagation()">
-          <ion-icon name="heart-outline" class="favorite-icon-outline"></ion-icon>
-        </ion-button>
-        <ion-icon *ngIf="i.favorite" name="heart" class="favorite-icon" (click)="toggleFavorite(i); $event.stopPropagation()"></ion-icon>
-      </div>
-      <ion-card-header>
-        <ion-card-title class="ion-text-wrap">{{ i.title }}</ion-card-title>
-        <ion-card-subtitle>{{ i.subtitle }}</ion-card-subtitle>
-      </ion-card-header>
-      
-      <!-- Conteúdo expandido -->
-      <ion-card-content *ngIf="i.expanded" class="expanded-content animate__animated animate__fadeIn">
-        <p class="item-description">{{ i.description }}</p>
-        
-        <!-- Informações extras -->
-        <div class="extra-info">
-          <div class="info-item" *ngFor="let info of getExtraInfo(i)">
-            <ion-chip outline="true" color="primary">
-              <ion-icon [name]="info.icon"></ion-icon>
-              <ion-label>{{ info.label }}</ion-label>
-            </ion-chip>
-            <div class="info-value">{{ info.value }}</div>
-          </div>
-        </div>
-        
-        <!-- Ações -->
-        <div class="card-actions">
-          <ion-button fill="clear" (click)="toggleFavorite(i); $event.stopPropagation()" color="primary">
-            <ion-icon slot="start" [name]="i.favorite ? 'heart' : 'heart-outline'"></ion-icon>
-            {{ i.favorite ? 'Favorito' : 'Adicionar aos favoritos' }}
+    <div class="category-heading ion-padding-start">
+      <h2>
+        <span *ngIf="selectedCategory === 'conv'">Convívio e Lazer</span>
+        <span *ngIf="selectedCategory === 'gastr'">Gastronomia</span>
+        <span *ngIf="selectedCategory === 'desp'">Desporto</span>
+      </h2>
+    </div>
+
+    <div class="vertical-cards">
+      <ion-card *ngFor="let i of getItems(selectedCategory)" 
+                (click)="toggleItemExpansion(i)" 
+                class="item-card animate__animated animate__fadeIn" 
+                [ngClass]="{'expanded': i.expanded}"
+                [id]="'card-' + i.title.replace(' ', '-').toLowerCase()">
+        <div class="img-container">
+          <img src="assets/images/{{ i.img }}" alt="{{ i.title }}" />
+          <div class="overlay-gradient"></div>
+          <ion-button *ngIf="!i.favorite" class="favorite-button" fill="clear" (click)="toggleFavorite(i); $event.stopPropagation()">
+            <ion-icon name="heart-outline" class="favorite-icon-outline"></ion-icon>
           </ion-button>
+          <ion-icon *ngIf="i.favorite" name="heart" class="favorite-icon" (click)="toggleFavorite(i); $event.stopPropagation()"></ion-icon>
         </div>
-      </ion-card-content>
-    </ion-card>
-  </div>
-  
-  <div class="empty-state" *ngIf="getItems(selectedCategory).length === 0">
-    <ion-icon name="alert-circle-outline" size="large"></ion-icon>
-    <p>Nenhum item encontrado nesta categoria.</p>
+        <ion-card-header>
+          <ion-card-title class="ion-text-wrap">{{ i.title }}</ion-card-title>
+          <ion-card-subtitle>{{ i.subtitle }}</ion-card-subtitle>
+        </ion-card-header>
+        
+        <!-- Conteúdo expandido -->
+        <ion-card-content *ngIf="i.expanded" class="expanded-content animate__animated animate__fadeIn">
+          <p class="item-description">{{ i.description }}</p>
+          
+          <!-- Informações extras -->
+          <div class="extra-info">
+            <div class="info-item" *ngFor="let info of getExtraInfo(i)">
+              <ion-chip outline="true" color="primary">
+                <ion-icon [name]="info.icon"></ion-icon>
+                <ion-label>{{ info.label }}</ion-label>
+              </ion-chip>
+              <div class="info-value">{{ info.value }}</div>
+            </div>
+          </div>
+          
+          <!-- Ações -->
+          <div class="card-actions">
+            <ion-button fill="clear" (click)="toggleFavorite(i); $event.stopPropagation()" color="primary">
+              <ion-icon slot="start" [name]="i.favorite ? 'heart' : 'heart-outline'"></ion-icon>
+              {{ i.favorite ? 'Favorito' : 'Adicionar aos favoritos' }}
+            </ion-button>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+    
+    <div class="empty-state" *ngIf="getItems(selectedCategory).length === 0">
+      <ion-icon name="alert-circle-outline" size="large"></ion-icon>
+      <p>Nenhum item encontrado nesta categoria.</p>
+    </div>
   </div>
 </ion-content>
