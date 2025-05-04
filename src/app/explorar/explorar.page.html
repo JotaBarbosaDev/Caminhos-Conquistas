@@ -1,8 +1,9 @@
 <!-- Usando o novo componente de cabeçalho com favoritos -->
 <app-header-with-favorites 
   title="Explorar" 
-  [showingFavorites]="showFavorites"
-  [onToggleFavorites]="toggleFavorites.bind(this)">
+  [showingFavorites]="showFavorites" 
+  [onToggleFavorites]="toggleFavorites.bind(this)"
+  [isHidden]="isPageHidden">
   <ion-button buttons-end (click)="toggleView()">
     <ion-icon [name]="viewType === 'grid' ? 'list-outline' : 'grid-outline'"></ion-icon>
   </ion-button>
@@ -53,8 +54,8 @@
     <!-- Visualização em grade -->
     <div class="events-grid" *ngIf="viewType === 'grid' && filteredEvents.length > 0">
       <ion-grid>
-        <ion-row>
-          <ion-col size="6" size-md="4" size-lg="3" *ngFor="let e of filteredEvents">
+        <ion-row class="equal-height-row">
+          <ion-col size="6" size-md="4" size-lg="3" *ngFor="let e of filteredEvents" class="equal-height-col">
             <ion-card (click)="openDetails(e)" class="event-card animate__animated animate__fadeIn">
               <div class="img-container">
                 <img src="assets/images/{{ e.img }}" alt="{{ e.title }}" />
@@ -117,3 +118,33 @@
     </div>
   </div>
 </ion-content>
+
+<style>
+  /* Estilo para manter os cards com tamanho igual */
+  .equal-height-row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .equal-height-col {
+    display: flex;
+  }
+  
+  .event-card {
+    width: 100%;
+    margin: 8px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .img-container {
+    height: 150px;
+    overflow: hidden;
+  }
+  
+  .img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>

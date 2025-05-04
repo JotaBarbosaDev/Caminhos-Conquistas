@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, HostListener } from '@angular/core';
 import { IonContent, RefresherCustomEvent, ToastController, IonicModule } from '@ionic/angular';
 import { ModalService } from '../services/modal.service';
 import { FavoritesService } from '../services/favorites.service';
@@ -83,12 +83,34 @@ export class ExplorarPage implements OnInit {
   selectedCategory: 'all' | 'cultural' | 'desporto' | 'gastronomia' = 'all';
   searchTerm: string = '';
   showFavorites: boolean = false;
+  isPageHidden = false;
 
   constructor(
     private modalService: ModalService,
     private toastController: ToastController,
     private favoritesService: FavoritesService
   ) {}
+
+  @HostListener('document:visibilitychange')
+  onVisibilityChange() {
+    // Verifica se a página está com aria-hidden quando o documento muda de visibilidade
+    setTimeout(() => {
+      const element = document.querySelector('app-explorar');
+      if (element) {
+        this.isPageHidden = element.getAttribute('aria-hidden') === 'true';
+      }
+    }, 0);
+  }
+
+  @HostListener('ionViewWillEnter')
+  ionViewWillEnter() {
+    this.isPageHidden = false;
+  }
+
+  @HostListener('ionViewDidLeave')
+  ionViewDidLeave() {
+    this.isPageHidden = true;
+  }
 
   ngOnInit() {
     this.filterEvents();

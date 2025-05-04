@@ -8,11 +8,11 @@ import { CommonModule } from '@angular/common';
     <ion-header class="ion-no-border">
       <ion-toolbar [color]="color" class="header-toolbar">
         <ion-buttons slot="start">
-          <ion-back-button *ngIf="showBackButton" [defaultHref]="backHref"></ion-back-button>
+          <ion-back-button *ngIf="showBackButton" [defaultHref]="backHref" text="Voltar" [attr.tabindex]="isHidden ? -1 : 0"></ion-back-button>
         </ion-buttons>
         <ion-title>{{ title }}</ion-title>
         <ion-buttons slot="end">
-          <ion-button (click)="onToggleFavorites()">
+          <ion-button (click)="onToggleFavorites()" [attr.tabindex]="isHidden ? -1 : 0">
             <ion-icon [name]="showingFavorites ? 'heart' : 'heart-outline'"></ion-icon>
           </ion-button>
           <ng-content select="[buttons-end]"></ng-content>
@@ -31,4 +31,5 @@ export class HeaderWithFavoritesComponent {
   @Input() backHref: string = '/tabs/perfil';
   @Input() showingFavorites: boolean = false;
   @Input() onToggleFavorites: () => void = () => {};
+  @Input() isHidden: boolean = false;
 }

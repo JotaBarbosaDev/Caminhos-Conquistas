@@ -1,33 +1,33 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonContent, AlertController, ToastController, RefresherCustomEvent, IonicModule } from '@ionic/angular';
-import { Router } from '@angular/router';
-import { FavoritesService } from '../services/favorites.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { FavoritesComponent } from '../components/favorites/favorites.component';
-import { HeaderWithFavoritesComponent } from '../components/favorites/header.component';
+import { IonicModule, ToastController, IonContent, RefresherCustomEvent, AlertController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 interface Skill {
   name: string;
   level: string;
 }
+
+interface Language {
+  name: string;
+  level: string;
+}
+
 interface Experience {
   role: string;
   company: string;
   period: string;
   icon: string;
-  description?: string;
-  tags?: string[];
+  description: string;
+  tags: string[];
 }
-interface Language {
-  name: string;
-  level: string;
-}
+
 interface Education {
   degree: string;
   institution: string;
   period: string;
-  description?: string;
+  description: string;
 }
 
 @Component({
@@ -38,9 +38,7 @@ interface Education {
   imports: [
     CommonModule,
     IonicModule,
-    FormsModule,
-    FavoritesComponent,
-    HeaderWithFavoritesComponent
+    FormsModule
   ]
 })
 export class PerfilPage implements OnInit {
@@ -82,13 +80,12 @@ export class PerfilPage implements OnInit {
     { name: 'Angular', level: 'Avançado' },
     { name: 'Ionic', level: 'Avançado' },
     { name: 'TypeScript', level: 'Avançado' },
-    { name: 'Figma', level: 'Intermédio' },
+    { name: 'C#', level: 'Intermédio' },
   ];
 
   languages: Language[] = [
     { name: 'Português', level: 'Nativo' },
-    { name: 'Inglês', level: 'Fluente' },
-    { name: 'Espanhol', level: 'Intermédio' },
+    { name: 'Inglês', level: 'Intermédio' },
   ];
 
   experiences: Experience[] = [
@@ -124,8 +121,7 @@ export class PerfilPage implements OnInit {
   constructor(
     private alertController: AlertController,
     private toastController: ToastController,
-    private router: Router,
-    private favoritesService: FavoritesService // Injetar o serviço de favoritos
+    private router: Router
   ) {}
 
   ngOnInit() {}

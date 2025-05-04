@@ -6,7 +6,6 @@ import {FavoritesService, FavoriteItem} from "../services/favorites.service";
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {FavoritesComponent} from "../components/favorites/favorites.component";
-import {HeaderWithFavoritesComponent} from "../components/favorites/header.component";
 
 interface Item {
   id?: string;
@@ -29,8 +28,7 @@ interface Item {
     CommonModule,
     IonicModule,
     FormsModule,
-    FavoritesComponent,
-    HeaderWithFavoritesComponent
+    FavoritesComponent
   ]
 })
 export class GostosPage implements OnInit {
