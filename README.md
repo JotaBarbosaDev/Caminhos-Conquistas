@@ -1,4 +1,4 @@
-# 📱 PortfolioIHM
+# 📱 Caminhos & Conquistas
 
 ![Versão](https://img.shields.io/badge/versão-1.0.0-blue)
 ![Status](https://img.shields.io/badge/status-em%20desenvolvimento-orange)
@@ -6,11 +6,11 @@
 ![Framework](https://img.shields.io/badge/framework-Ionic%20%7C%20Angular-blue)
 ![Licença](https://img.shields.io/badge/licença-MIT-green)
 
-**PortfolioIHM** é uma aplicação móvel desenvolvida com Ionic e Angular que apresenta um portfolio pessoal interativo. Criada como projeto da cadeira de Interação Homem-Máquina, esta aplicação demonstra um design responsivo em dispositivos móveis.
+**Caminhos & Conquistas** é uma aplicação móvel desenvolvida com Ionic e Angular que apresenta um portfolio pessoal interativo. Criada como projeto da cadeira de Interação Homem-Máquina, esta aplicação demonstra um design responsivo em dispositivos móveis.
 Com ele é possível ver as minhas informações pessoais, conquistas, gostos e explorar a terra natal de forma intuitiva e envolvente.
 
 <div align="center">
-  <img src="screenshots/app-showcase.png" alt="PortfolioIHM Showcase" width="800px">
+  <img src="src/assets/images/screenshots/perfil.png" alt="Caminhos & Conquistas Showcase" width="800px">
 </div>
 
 ## 📋 Índice
@@ -38,9 +38,9 @@ Com ele é possível ver as minhas informações pessoais, conquistas, gostos e 
 ### Página de Perfil
 
 <div align="center">
-  <img src="src/assets/images/screenshots/perfilAbout.PNG" alt="Perfil - About" width="250px">
-  <img src="src/assets/images/screenshots/perfilExperiencia.PNG" alt="Perfil - Experiência" width="250px">
-  <img src="src/assets/images/screenshots/perfilEducacao.PNG" alt="Perfil - Educação" width="250px">
+  <img src="src/assets/images/screenshots/perfilSobre.png" alt="Perfil - Sobre" width="250px">
+  <img src="src/assets/images/screenshots/perfilExperiencia.png" alt="Perfil - Experiência" width="250px">
+  <img src="src/assets/images/screenshots/perfilEducacao.png" alt="Perfil - Educação" width="250px">
 </div>
 
 A página de perfil oferece uma visão completa das informações pessoais e profissionais, organizada em três seções principais através de um segmento de navegação:
@@ -51,9 +51,9 @@ A página de perfil oferece uma visão completa das informações pessoais e pro
 ### Página de Conquistas
 
 <div align="center">
-  <img src="screenshots/conquistas-cards.png" alt="Conquistas - Cards" width="250px">
-  <img src="screenshots/conquistas-grid.png" alt="Conquistas - Grade" width="250px">
-  <img src="screenshots/conquistas-detail.png" alt="Detalhe da Conquista" width="250px">
+  <img src="src/assets/images/screenshots/conquistasTodos.png" alt="Conquistas - Todos" width="250px">
+  <img src="src/assets/images/screenshots/conquistasViagens.png" alt="Conquistas - Viagens" width="250px">
+  <img src="src/assets/images/screenshots/conquistasCursos.png" alt="Conquistas - Cursos" width="250px">
 </div>
 
 A seção de conquistas permite visualizar viagens e cursos concluídos, com:
@@ -64,20 +64,21 @@ A seção de conquistas permite visualizar viagens e cursos concluídos, com:
 ### Página Terra Natal
 
 <div align="center">
-  <img src="screenshots/terra-mapa.png" alt="Terra - Mapa" width="250px">
-  <img src="screenshots/terra-pontos.png" alt="Terra - Pontos de Interesse" width="250px">
+  <img src="src/assets/images/screenshots/terraMapa.png" alt="Terra - Mapa" width="250px">
+  <img src="src/assets/images/screenshots/terra.png" alt="Terra - Pontos de Interesse" width="250px">
 </div>
 
 Exibição interativa da terra natal com:
-- Mapa da região com marcadores importantes
+- Mapa da região com marcadores e polígonos (distrito, concelho, freguesia)
 - Lista de pontos de interesse por localidade
 - Informações detalhadas sobre atrações locais
 
 ### Página de Gostos
 
 <div align="center">
-  <img src="screenshots/gostos-gastronomia.png" alt="Gostos - Gastronomia" width="250px">
-  <img src="screenshots/gostos-desporto.png" alt="Gostos - Desporto" width="250px">
+  <img src="src/assets/images/screenshots/gostosConvivio.png" alt="Gostos - Convívio" width="250px">
+  <img src="src/assets/images/screenshots/gostosGastronomia.png" alt="Gostos - Gastronomia" width="250px">
+  <img src="src/assets/images/screenshots/gostosDesporto.png" alt="Gostos - Desporto" width="250px">
 </div>
 
 Apresentação de preferências pessoais organizadas por categorias:
@@ -88,23 +89,24 @@ Apresentação de preferências pessoais organizadas por categorias:
 ### Página Explorar
 
 <div align="center">
-  <img src="screenshots/explorar-eventos.png" alt="Explorar - Eventos" width="250px">
-  <img src="screenshots/explorar-filtro.png" alt="Explorar - Filtro" width="250px">
+  <img src="src/assets/images/screenshots/explorar.png" alt="Explorar" width="250px">
+  <img src="src/assets/images/screenshots/favoritos.png" alt="Favoritos" width="250px">
 </div>
 
 Descoberta de eventos e atividades regionais:
 - Filtros por categoria
 - Alternância entre visualizações
+- Sistema de favoritos integrado
 - Detalhes de cada evento
 
 ## 🚀 Instalação
 
 ```bash
 # Clone o repositório
-git clone https://github.com/JotaBarbosaDev/PortfolioIHM
+git clone https://github.com/JotaBarbosaDev/Caminhos-Conquistas
 
 # Entre no diretório
-cd PortfolioIHM
+cd Caminhos-Conquistas
 
 # Instale as dependências
 npm install
@@ -133,11 +135,15 @@ ionic capacitor build ios
 src/
 ├── app/
 │   ├── components/         # Componentes reutilizáveis
+│   │   ├── detail-modal/   # Modal de detalhes
+│   │   ├── favorites/      # Sistema de favoritos
+│   │   └── settings/       # Configurações
 │   ├── conquistas/         # Página de conquistas
 │   ├── explorar/           # Página de exploração
 │   ├── gostos/             # Página de gostos
 │   ├── perfil/             # Página de perfil
 │   ├── terra/              # Página sobre terra natal
+│   ├── services/           # Serviços compartilhados
 │   └── tabs/               # Navegação principal
 ├── assets/
 │   ├── icon/               # Ícones do aplicativo
@@ -154,15 +160,23 @@ src/
 
 ### Sistema de Conquistas
 - Organização de conquistas pessoais e profissionais
-- Indicadores visuais de progresso para cursos
+- Filtros por categorias (viagens, cursos)
+- Visualização em cards ou grid
 
 ### Exploração Regional
-- Mapa interativo da terra natal
-- Pontos de interesse categorizados
+- Mapa interativo da terra natal com polígonos administrativos
+- Marcadores de pontos de interesse
+- Alternância entre mapa e galeria
 
 ### Personalização de Gostos
 - Interface organizada por categorias
-- Cards para cada preferência
+- Cards expansíveis para cada preferência
+- Sistema de favoritos integrado
+
+### Funcionalidade de Favoritos
+- Marcação de itens favoritos em todas as seções
+- Acesso rápido aos favoritos
+- Sincronização com armazenamento local
 
 ## 🤝 Contribuição
 
@@ -184,7 +198,7 @@ Distribuído sob a licença MIT. Veja `LICENSE` para mais informações.
 - Pessoal: jotambbarbosa@gmail.com
 - Acadêmico: joao.barbosa@estg.pt
 
-Link do projeto: [https://github.com/JotaBarbosaDev/PortfolioIHM](https://github.com/JotaBarbosaDev/PortfolioIHM)
+Link do projeto: [https://github.com/JotaBarbosaDev/Caminhos-Conquistas](https://github.com/JotaBarbosaDev/Caminhos-Conquistas)
 
 ---
 
