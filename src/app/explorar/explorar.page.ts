@@ -76,7 +76,6 @@ export class ExplorarPage implements OnInit {
     },
   ];
 
-  // Nova propriedade para armazenar eventos filtrados
   filteredEvents: Event[] = [];
 
   viewType: 'grid' | 'list' = 'grid';
@@ -93,7 +92,6 @@ export class ExplorarPage implements OnInit {
 
   @HostListener('document:visibilitychange')
   onVisibilityChange() {
-    // Verifica se a página está com aria-hidden quando o documento muda de visibilidade
     setTimeout(() => {
       const element = document.querySelector('app-explorar');
       if (element) {
@@ -122,7 +120,6 @@ export class ExplorarPage implements OnInit {
   }
 
   filterEvents() {
-    // Em vez de modificar o array original, criamos um novo array filtrado
     this.filteredEvents = this.events.filter(event => {
       const matchesSearch = !this.searchTerm || 
         event.title.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
@@ -149,9 +146,9 @@ export class ExplorarPage implements OnInit {
     this.showFavorites = !this.showFavorites;
 
     if (this.showFavorites) {
-      this.presentToast('Visualizando seus favoritos');
+      this.presentToast('A visualizar os seus favoritos');
     } else {
-      this.presentToast('Voltando para explorar');
+      this.presentToast('A voltar para explorar');
     }
 
     if (this.content) {

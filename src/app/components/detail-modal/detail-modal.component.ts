@@ -2,7 +2,6 @@ import { Component, Input, ViewChild, ElementRef, AfterViewInit } from "@angular
 import { ModalController, ToastController, IonContent } from "@ionic/angular";
 import { AnimationController } from "@ionic/angular";
 
-// Interface para informações extras exibidas no modal
 export interface ExtraInfo {
   icon: string;
   label: string;
@@ -41,17 +40,14 @@ export class DetailModalComponent implements AfterViewInit {
     private toastCtrl: ToastController,
     private animationCtrl: AnimationController
   ) {
-    // Verificar se a API de compartilhamento está disponível
     this.canShare = !!navigator && !!navigator.share;
   }
   
   ngOnInit() {
-    // Inicializar estados
     if (this.favorite !== undefined) {
       this.isFavorite = this.favorite;
     }
     
-    // Garantir que img tenha sempre um valor válido
     if (!this.img) {
       this.img = 'assets/images/placeholder.jpg';
     }
@@ -59,33 +55,27 @@ export class DetailModalComponent implements AfterViewInit {
       this.img = `assets/images/${this.img}`;
     }
     
-    // Gerar URL do mapa se temos coordenadas mas não temos URL definida
     if (this.coordinates && !this.mapUrl) {
       this.mapUrl = `https://www.google.com/maps?q=${this.coordinates.lat},${this.coordinates.lng}`;
     }
   }
   
   ngAfterViewInit() {
-    // Configurar efeito de parallax na imagem quando rolar
     setTimeout(() => {
       this.setupParallaxEffect();
-    }, 300); // Adicionar delay para garantir que o DOM esteja pronto
+    }, 300);
   }
 
-  // Configurar efeito de parallax
   private setupParallaxEffect() {
     if (this.content) {
       this.content.scrollEvents = true;
       
-      // Usar o evento de scroll para mover a imagem
       this.content.ionScroll.subscribe((event: any) => {
         if (event && event.detail) {
           const scrollTop = event.detail.scrollTop;
           
-          // Selecionar a imagem do parallax
           const parallaxImage = document.querySelector('.parallax-image img') as HTMLElement;
           if (parallaxImage) {
-            // Aplicar transformação com base no scroll
             const translateY = Math.min(-10 + (scrollTop * 0.2), 20);
             parallaxImage.style.transform = `translateY(${translateY}%)`;
           }
@@ -94,7 +84,6 @@ export class DetailModalComponent implements AfterViewInit {
     }
   }
 
-  // Fechar o modal
   dismiss() {
     this.modalCtrl.dismiss({
       favoriteChanged: this.favoriteChanged,
@@ -102,13 +91,11 @@ export class DetailModalComponent implements AfterViewInit {
     });
   }
   
-  // Alternar estado de favorito
   toggleFavorite() {
     this.isFavorite = !this.isFavorite;
     this.favorite = this.isFavorite;
     this.favoriteChanged = true;
     
-    // Efeito de animação no ícone
     const favoriteIcon = document.querySelector('.favorite-btn ion-icon');
     if (favoriteIcon) {
       const animation = this.animationCtrl.create()
@@ -123,19 +110,16 @@ export class DetailModalComponent implements AfterViewInit {
       animation.play();
     }
     
-    // Mostrar feedback ao usuário
     this.showToast(this.isFavorite ? 'Adicionado aos favoritos' : 'Removido dos favoritos');
     
-    // Chamar função do componente pai
     if (typeof this.onToggleFavorite === 'function') {
       this.onToggleFavorite();
     }
   }
   
-  // Compartilhar conteúdo
   async shareContent() {
     if (!navigator.share) {
-      this.showToast('Compartilhamento não suportado neste navegador');
+      this.showToast('Partilha não suportada neste navegador');
       return;
     }
     
@@ -145,21 +129,18 @@ export class DetailModalComponent implements AfterViewInit {
         text: this.description,
         url: window.location.href
       });
-      this.showToast('Conteúdo compartilhado com sucesso!');
+      this.showToast('Conteúdo partilhado com sucesso!');
     } catch (error: any) {
-      console.error('Erro ao compartilhar:', error);
-      // Usuário cancelou o compartilhamento - não exibir erro
+      console.error('Erro ao partilhar:', error);
       if (error.name !== 'AbortError') {
-        this.showToast('Não foi possível compartilhar');
+        this.showToast('Não foi possível partilhar');
       }
     }
   }
   
-  // Avaliar item (sistema de estrelas)
   rateItem(rating: number) {
     this.userRating = rating;
     
-    // Atualizar visualmente as estrelas
     const stars = document.querySelectorAll('.rating-stars ion-icon');
     stars.forEach((star: Element, index: number) => {
       if (index < rating) {
@@ -171,7 +152,6 @@ export class DetailModalComponent implements AfterViewInit {
       }
     });
     
-    // Animação nas estrelas
     const starsContainer = document.querySelector('.rating-stars');
     if (starsContainer) {
       const animation = this.animationCtrl.create()
@@ -186,10 +166,9 @@ export class DetailModalComponent implements AfterViewInit {
       animation.play();
     }
     
-    this.showToast(`Você avaliou com ${rating} ${rating === 1 ? 'estrela' : 'estrelas'}!`);
+    this.showToast(`Avaliaste com ${rating} ${rating === 1 ? 'estrela' : 'estrelas'}!`);
   }
   
-  // Retornar o ícone apropriado para o botão de ação principal
   getActionIcon(): string {
     if (!this.mainActionText) return 'information-circle-outline';
     
@@ -198,7 +177,7 @@ export class DetailModalComponent implements AfterViewInit {
       return 'map-outline';
     } else if (this.mainActionText.toLowerCase().includes('informações')) {
       return 'information-circle-outline';
-    } else if (this.mainActionText.toLowerCase().includes('contato')) {
+    } else if (this.mainActionText.toLowerCase().includes('contacto')) {
       return 'call-outline';
     } else if (this.mainActionText.toLowerCase().includes('comprar') || 
                this.mainActionText.toLowerCase().includes('reservar')) {
@@ -208,19 +187,16 @@ export class DetailModalComponent implements AfterViewInit {
     }
   }
   
-  // Ação principal
   onMainAction() {
     if (this.mapUrl) {
       window.open(this.mapUrl, '_blank');
     }
   }
   
-  // Tratar erro ao carregar imagem
   handleImageError(event: any) {
     event.target.src = 'assets/images/placeholder.jpg';
   }
   
-  // Exibir toast para feedback
   private async showToast(message: string) {
     const toast = await this.toastCtrl.create({
       message: message,

@@ -38,7 +38,6 @@ export class GostosPage implements OnInit {
   lastSelectedCategory = "conv";
   showFavorites: boolean = false;
   
-  // Item que está expandido atualmente
   expandedItem: Item | null = null;
   
   convivio: Item[] = [
@@ -80,7 +79,7 @@ export class GostosPage implements OnInit {
     },
     {
       title: "Sushi",
-      subtitle: "Comida Japonêsa",
+      subtitle: "Comida Japonesa",
       img: "sushi.webp",
       description: "Rolo de arroz com peixe fresco e vegetais.",
       favorite: false,
@@ -98,7 +97,7 @@ export class GostosPage implements OnInit {
   
   desporto: Item[] = [
     {
-      title: "Ginasio",
+      title: "Ginásio",
       subtitle: "Treinos regulares",
       img: "ginasio.webp",
       description: "Treinos de força e resistência para manter a forma.",
@@ -128,19 +127,14 @@ export class GostosPage implements OnInit {
     private toastController: ToastController,
     private alertController: AlertController,
     private animationCtrl: AnimationController,
-    private favoritesService: FavoritesService // Injetando o serviço de favoritos
+    private favoritesService: FavoritesService
   ) {}
   
   ngOnInit() {
-    // Carregar favoritos salvos do localStorage, se houver
     this.loadFavorites();
-    
-    // Sincronizar detalhes dos favoritos com o serviço
     this.syncFavoritesDetails();
     
-    // Inscreva-se para atualizações no serviço de favoritos
     this.favoritesService.favorites$.subscribe(() => {
-      // Atualizar o status de favoritos dos itens sempre que houver mudanças no serviço
       this.updateLocalFavoritesFromService();
     });
   }
@@ -253,7 +247,6 @@ export class GostosPage implements OnInit {
   async toggleFavorite(item: Item) {
     item.favorite = !item.favorite;
     
-    // Efeito de animação no ícone
     const favoriteIcon = document.querySelector(`#card-${item.title.replace(/\s+/g, '-').toLowerCase()} .favorite-icon`);
     if (favoriteIcon) {
       const animation = this.animationCtrl.create()
@@ -268,7 +261,6 @@ export class GostosPage implements OnInit {
       animation.play();
     }
     
-    // Determinar a categoria do item
     let category = 'convivio';
     if (this.gastronomia.includes(item)) {
       category = 'gastronomia';
@@ -277,7 +269,6 @@ export class GostosPage implements OnInit {
     }
     
     if (item.favorite) {
-      // Adicionar ao serviço de favoritos
       this.favoritesService.addFavorite({
         id: item.title,
         title: item.title,
@@ -289,12 +280,10 @@ export class GostosPage implements OnInit {
       });
       await this.presentToast(`${item.title} adicionado aos favoritos!`);
     } else {
-      // Remover do serviço de favoritos
       this.favoritesService.removeFavorite(item.title, 'gostos');
       await this.presentToast(`${item.title} removido dos favoritos!`);
     }
     
-    // Salvar os favoritos também no formato antigo para compatibilidade
     this.saveFavorites();
   }
   
@@ -302,9 +291,9 @@ export class GostosPage implements OnInit {
     this.showFavorites = !this.showFavorites;
     
     if (this.showFavorites) {
-      this.presentToast('Visualizando seus favoritos');
+      this.presentToast('A visualizar os seus favoritos');
     } else {
-      this.presentToast('Voltando para gostos');
+      this.presentToast('A voltar para gostos');
     }
     
     this.content.scrollToTop(500);
@@ -389,7 +378,6 @@ export class GostosPage implements OnInit {
   }
 
   private updateLocalFavoritesFromService() {
-    // Percorrer todos os itens e atualizar o status de favorito
     const updateItems = (items: Item[], category: string) => {
       items.forEach(item => {
         item.favorite = this.favoritesService.isFavorite(item.title, 'gostos');

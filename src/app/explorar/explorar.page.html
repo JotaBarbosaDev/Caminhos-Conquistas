@@ -21,7 +21,7 @@
   <div *ngIf="!showFavorites">
     <div class="intro-section animate__animated animate__fadeIn">
       <h1 class="page-title">Atividades e Eventos</h1>
-      <p class="page-subtitle">Descubra o que está acontecendo na região</p>
+      <p class="page-subtitle">Descubra o que está a acontecer na região</p>
     </div>
 
     <!-- Barra de pesquisa -->
@@ -51,7 +51,7 @@
       </ion-segment-button>
     </ion-segment>
 
-    <!-- Visualização em grade -->
+    <!-- Visualização em grelha -->
     <div class="events-grid" *ngIf="viewType === 'grid' && filteredEvents.length > 0">
       <ion-grid>
         <ion-row class="equal-height-row">
@@ -82,7 +82,7 @@
       </ion-grid>
     </div>
 
-    <!-- Visualização em horizontal scroll -->
+    <!-- Visualização em scroll horizontal -->
     <div class="horizontal-scroll" *ngIf="viewType === 'list' && filteredEvents.length > 0">
       <ion-card *ngFor="let e of filteredEvents" (click)="openDetails(e)" class="event-card animate__animated animate__fadeIn">
         <div class="img-container">
@@ -111,7 +111,7 @@
     <div class="empty-state" *ngIf="filteredEvents.length === 0">
       <ion-icon name="calendar-outline" size="large"></ion-icon>
       <h3>Nenhum evento encontrado</h3>
-      <p>Tente mudar os filtros ou buscar outro termo</p>
+      <p>Tente modificar os filtros ou procurar outro termo</p>
       <ion-button (click)="resetFilters()" fill="outline">
         Limpar filtros
       </ion-button>

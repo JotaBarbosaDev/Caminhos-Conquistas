@@ -58,7 +58,6 @@ export class SettingsModalComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // Determinar o tema atual
     this.preferencesService.themeConfig$.subscribe(themeConfig => {
       if (themeConfig.darkMode === null) {
         this.currentTheme = 'system';
@@ -67,7 +66,6 @@ export class SettingsModalComponent implements OnInit {
       }
     });
     
-    // Carregar preferências salvas para notificações e analytics
     const notificationSettings = localStorage.getItem('notification-settings');
     if (notificationSettings) {
       try {
@@ -75,7 +73,7 @@ export class SettingsModalComponent implements OnInit {
         this.notifications = settings.enabled ?? true;
         this.emailNotifications = settings.email ?? false;
       } catch (error) {
-        console.error('Erro ao carregar configurações de notificação:', error);
+        console.error('Erro ao carregar definições de notificação:', error);
       }
     }
     
@@ -85,13 +83,12 @@ export class SettingsModalComponent implements OnInit {
         const settings = JSON.parse(analyticsSettings);
         this.analytics = settings.enabled ?? true;
       } catch (error) {
-        console.error('Erro ao carregar configurações de analytics:', error);
+        console.error('Erro ao carregar definições de analytics:', error);
       }
     }
   }
 
   dismiss() {
-    // Salvar configurações antes de fechar
     this.saveSettings();
     this.modalCtrl.dismiss();
   }
@@ -111,20 +108,17 @@ export class SettingsModalComponent implements OnInit {
         break;
     }
     
-    // Salvar a preferência de tema
     this.preferencesService.themeConfig$.subscribe(config => {
       localStorage.setItem('theme-preference', JSON.stringify(config));
     });
   }
   
   saveSettings() {
-    // Salvar configurações de notificação
     localStorage.setItem('notification-settings', JSON.stringify({
       enabled: this.notifications,
       email: this.emailNotifications
     }));
     
-    // Salvar configurações de analytics
     localStorage.setItem('analytics-settings', JSON.stringify({
       enabled: this.analytics
     }));
@@ -133,7 +127,7 @@ export class SettingsModalComponent implements OnInit {
   async showPrivacyPolicy() {
     const alert = await this.alertCtrl.create({
       header: 'Política de Privacidade',
-      message: 'Este aplicativo de portfólio coleta dados mínimos para melhorar a experiência do usuário. Nenhum dado pessoal é coletado ou compartilhado com terceiros. Os dados locais são armazenados apenas no seu dispositivo para salvar suas preferências e favoritos.',
+      message: 'Esta aplicação de portfólio recolhe dados mínimos para melhorar a experiência do utilizador. Nenhum dado pessoal é recolhido ou partilhado com terceiros. Os dados locais são armazenados apenas no seu dispositivo para guardar as suas preferências e favoritos.',
       buttons: ['OK']
     });
     
@@ -143,7 +137,7 @@ export class SettingsModalComponent implements OnInit {
   async confirmClearFavorites() {
     const alert = await this.alertCtrl.create({
       header: 'Limpar Favoritos',
-      message: 'Tem certeza que deseja remover todos os itens favoritos? Esta ação não pode ser desfeita.',
+      message: 'Tem a certeza que deseja remover todos os itens favoritos? Esta ação não pode ser desfeita.',
       buttons: [
         {
           text: 'Cancelar',
@@ -163,7 +157,6 @@ export class SettingsModalComponent implements OnInit {
   }
   
   async clearFavorites() {
-    // Limpar favoritos
     this.preferencesService.clearFavorites();
     
     const toast = await this.toastCtrl.create({
@@ -177,8 +170,8 @@ export class SettingsModalComponent implements OnInit {
   
   async confirmClearData() {
     const alert = await this.alertCtrl.create({
-      header: 'Redefinir Aplicativo',
-      message: 'Esta ação irá limpar todos os dados salvos, incluindo favoritos, preferências e configurações. O aplicativo será redefinido para o estado inicial. Tem certeza que deseja continuar?',
+      header: 'Redefinir Aplicação',
+      message: 'Esta ação irá limpar todos os dados guardados, incluindo favoritos, preferências e definições. A aplicação será redefinida para o estado inicial. Tem a certeza que deseja continuar?',
       buttons: [
         {
           text: 'Cancelar',
@@ -198,31 +191,26 @@ export class SettingsModalComponent implements OnInit {
   }
   
   async clearAllData() {
-    // Limpar todos os dados
     localStorage.clear();
     
-    // Redefinir os observables do serviço de preferências
     this.preferencesService.setSystemTheme();
     this.preferencesService.clearFavorites();
     
-    // Atualizar a interface
     this.currentTheme = 'system';
     this.notifications = true;
     this.emailNotifications = false;
     this.analytics = true;
     
     const toast = await this.toastCtrl.create({
-      message: 'Aplicativo redefinido para as configurações padrão',
+      message: 'Aplicação redefinida para as definições padrão',
       duration: 2000,
       position: 'bottom'
     });
     
     await toast.present();
     
-    // Fechar o modal após limpar
     this.modalCtrl.dismiss();
     
-    // Forçar uma atualização completa da página
     window.location.reload();
   }
 }

@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FavoritesComponent } from '../components/favorites/favorites.component';
 import { HeaderWithFavoritesComponent } from '../components/favorites/header.component';
-// Importando Leaflet para o mapa
 import * as L from 'leaflet';
 
 interface Place {
@@ -37,24 +36,21 @@ interface Place {
 export class TerraPage implements OnInit, AfterViewInit {
   @ViewChild(IonContent) content!: IonContent;
   
-  // Controles de UI
   showMap: boolean = false;
   showScrollButton: boolean = false;
   showFavorites: boolean = false;
   
-  // Propriedades do mapa
   private map: L.Map | null = null;
   private markers: L.Marker[] = [];
   private isMapInitialized: boolean = false;
 
-  // Coordenadas centrais para o mapa (Viana do Castelo)
   private mapCenter: [number, number] = [41.7, -8.7];
   private defaultZoom: number = 10;
 
   districtDescription =
     "Viana do Castelo é um distrito costeiro do Norte de Portugal, conhecido pela história, cultura e paisagens naturais. Situado entre o Oceano Atlântico e as montanhas, oferece cenários deslumbrantes e uma rica herança cultural.";
   municipalityDescription =
-    "Ponte de Lima, o concelho mais antigo de Portugal, famoso pela ponte romana e festivais tradicionais. Este município combina história medieval com paisagens rurais encantadoras e uma forte tradição gastronômica.";
+    "Ponte de Lima, o concelho mais antigo de Portugal, famoso pela ponte romana e festivais tradicionais. Este município combina história medieval com paisagens rurais encantadoras e uma forte tradição gastronómica.";
   parishDescription =
     "Freixo é uma freguesia pitoresca de Ponte de Lima, com raízes históricas e ambiente rural. Caracterizada por montanhas, vales e uma comunidade acolhedora, mantém vivas as tradições agrícolas e festivas do Alto Minho.";
 
@@ -142,19 +138,15 @@ export class TerraPage implements OnInit, AfterViewInit {
   constructor(
     private modalService: ModalService,
     private toastController: ToastController,
-    private favoritesService: FavoritesService // Injetamos o serviço de favoritos
+    private favoritesService: FavoritesService
   ) {}
   
   ngOnInit() {
-    // Adicionar listener para detectar o scroll e mostrar/esconder o botão de voltar ao topo
     this.setupScrollListener();
-    
-    // Sincronizar detalhes dos itens com o serviço de favoritos
     this.syncFavoritesDetails();
   }
   
   ngAfterViewInit() {
-    // Carregamos os estilos CSS do Leaflet
     this.loadLeafletStyles();
   }
   
@@ -181,73 +173,57 @@ export class TerraPage implements OnInit, AfterViewInit {
   toggleMap() {
     this.showMap = !this.showMap;
     
-    // Mostrar uma mensagem contextual para o usuário
     const message = this.showMap ? 
-      'Visualizando mapa da região' : 
-      'Visualizando pontos de interesse';
+      'A visualizar mapa da região' : 
+      'A visualizar pontos de interesse';
     
     this.presentToast(message);
     
-    // Se estiver mostrando o mapa, inicialize-o ou atualize-o
     if (this.showMap) {
       setTimeout(() => {
         this.initializeMap();
-      }, 300); // Pequeno delay para garantir que o contêiner do mapa esteja visível
+      }, 300);
     }
     
-    // Voltar ao topo quando mudar de modo
     this.scrollToTop();
   }
   
-  // Inicializa o mapa com os marcadores
   private initializeMap() {
-    // Se o mapa já foi inicializado, apenas atualize-o
     if (this.isMapInitialized && this.map) {
       this.map.invalidateSize();
       return;
     }
     
-    // Elemento onde o mapa será renderizado
     const mapElement = document.getElementById('map');
     if (!mapElement) {
       console.error('Elemento do mapa não encontrado');
       return;
     }
 
-    // Inicializa o mapa
     this.map = L.map('map').setView(this.mapCenter, this.defaultZoom);
     
-    // Adiciona a camada de satélite (Esri World Imagery)
     L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
       attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
       maxZoom: 19
     }).addTo(this.map);
     
-    // Adiciona os marcadores para todos os locais
     this.addMarkersToMap();
-    
-    // Adiciona as camadas de polígonos para as regiões
     this.addRegionPolygonsToMap();
     
-    // Marca como inicializado
     this.isMapInitialized = true;
   }
   
-  // Adiciona os marcadores no mapa para locais de interesse
   private addMarkersToMap() {
     if (!this.map) return;
     
-    // Limpa os marcadores existentes
     this.clearMarkers();
     
-    // Combina todos os locais de todas as regiões
     const allPlaces = [
       ...this.district, 
       ...this.municipality, 
       ...this.parish
     ].filter(place => place.coordinates);
     
-    // Função para criar um ícone colorido baseado na região
     const createIcon = (region: string) => {
       const color = region === 'district' ? '#3880ff' : 
                    region === 'municipality' ? '#2dd36f' : 
@@ -261,10 +237,8 @@ export class TerraPage implements OnInit, AfterViewInit {
       });
     };
     
-    // Cria marcadores para todos os lugares
     allPlaces.forEach(place => {
       if (place.coordinates) {
-        // Determina a região do local (para cor do ícone)
         let region = 'parish';
         if (this.district.find(p => p.title === place.title)) {
           region = 'district';
@@ -272,30 +246,25 @@ export class TerraPage implements OnInit, AfterViewInit {
           region = 'municipality';
         }
         
-        // Cria o marcador
         const marker = L.marker(
           [place.coordinates.lat, place.coordinates.lng],
           { icon: createIcon(region) }
         ).addTo(this.map!);
         
-        // Adiciona popup com informações
         marker.bindPopup(`
           <strong>${place.title}</strong><br>
           ${place.subtitle}<br>
           <small>${place.location || ''}</small>
         `);
         
-        // Armazena o marcador para poder removê-lo depois
         this.markers.push(marker);
       }
     });
   }
   
-  // Adiciona os polígonos para as regiões administrativas
   private addRegionPolygonsToMap() {
     if (!this.map) return;
     
-    // Coordenadas aproximadas para o distrito de Viana do Castelo (simplificado)
     const districtCoords: L.LatLngExpression[] = [
       [41.80, -8.90],
       [41.90, -8.70],
@@ -308,7 +277,6 @@ export class TerraPage implements OnInit, AfterViewInit {
       [41.80, -8.90]
     ];
     
-    // Coordenadas aproximadas para o concelho de Ponte de Lima (simplificado)
     const municipalityCoords: L.LatLngExpression[] = [
       [41.74, -8.65],
       [41.80, -8.55],
@@ -319,7 +287,6 @@ export class TerraPage implements OnInit, AfterViewInit {
       [41.74, -8.65]
     ];
     
-    // Coordenadas aproximadas para a freguesia de Freixo (simplificado)
     const parishCoords: L.LatLngExpression[] = [
       [41.75, -8.54],
       [41.76, -8.52],
@@ -328,7 +295,6 @@ export class TerraPage implements OnInit, AfterViewInit {
       [41.75, -8.54]
     ];
     
-    // Criar e adicionar os polígonos
     L.polygon(districtCoords, {
       color: '#3880ff',
       weight: 2,
@@ -348,7 +314,6 @@ export class TerraPage implements OnInit, AfterViewInit {
     }).addTo(this.map).bindPopup('Freguesia de Freixo');
   }
   
-  // Limpa os marcadores do mapa
   private clearMarkers() {
     if (!this.map) return;
     
@@ -367,10 +332,8 @@ export class TerraPage implements OnInit, AfterViewInit {
     const itemId = item.id || item.title;
     const isFavorite = this.isFavorite(itemId);
     
-    // Gerar mapUrl apenas se as coordenadas existirem
     const mapUrl = item.mapUrl || (item.coordinates ? this.getMapUrl(item.coordinates) : '');
     
-    // Criando informações extras mais detalhadas
     let extraInfo = [
       {
         icon: 'location-outline',
@@ -384,7 +347,6 @@ export class TerraPage implements OnInit, AfterViewInit {
       }
     ];
     
-    // Adicionar coordenadas se disponíveis
     if (item.coordinates) {
       extraInfo.push({
         icon: 'map-outline',
@@ -393,7 +355,6 @@ export class TerraPage implements OnInit, AfterViewInit {
       });
     }
     
-    // Usar o serviço de modal para abrir o modal de detalhes
     const { data } = await this.modalService.openDetailModal({
       id: itemId,
       title: item.title,
@@ -410,25 +371,20 @@ export class TerraPage implements OnInit, AfterViewInit {
       onToggleFavorite: () => this.toggleFavorite(itemId, item.title)
     });
     
-    // Processar dados quando o modal fechar
     if (data && data.favoriteChanged) {
       this.toggleFavorite(itemId, item.title);
     }
   }
   
-  // Método para verificar se um item é favorito
   isFavorite(id: string): boolean {
     return this.favoritesService.isFavorite(id, 'terra');
   }
   
-  // Método para alternar o estado de favorito de um item
   toggleFavorite(id: string, title: string) {
     if (this.isFavorite(id)) {
-      // Remover dos favoritos
       this.favoritesService.removeFavorite(id, 'terra');
       this.presentToast(`Removido dos favoritos`);
     } else {
-      // Adicionar aos favoritos
       const item = [
         ...this.district, 
         ...this.municipality, 
@@ -451,7 +407,6 @@ export class TerraPage implements OnInit, AfterViewInit {
     }
   }
 
-  // Método para sincronizar detalhes dos itens com o serviço
   syncFavoritesDetails() {
     const allPlaces = [...this.district, ...this.municipality, ...this.parish];
     this.favoritesService.updateFavoriteDetails(allPlaces, 'terra');
@@ -461,17 +416,15 @@ export class TerraPage implements OnInit, AfterViewInit {
     this.showFavorites = !this.showFavorites;
     
     if (this.showFavorites) {
-      this.presentToast('Visualizando seus favoritos');
+      this.presentToast('A visualizar os seus favoritos');
     } else {
-      this.presentToast('Voltando para pontos de interesse');
+      this.presentToast('A voltar para pontos de interesse');
     }
     
-    // Voltar ao topo quando mudar de modo
     this.scrollToTop();
   }
 
   doRefresh(event: RefresherCustomEvent) {
-    // Simular uma atualização de dados
     setTimeout(() => {
       this.randomizePlaces();
       event.target.complete();
@@ -480,7 +433,6 @@ export class TerraPage implements OnInit, AfterViewInit {
   }
   
   private randomizePlaces() {
-    // Fisher-Yates shuffle algorithm para simular a atualização de dados
     const shuffle = (array: Place[]) => {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -494,7 +446,6 @@ export class TerraPage implements OnInit, AfterViewInit {
     this.parish = shuffle([...this.parish]);
   }
   
-  // Método para gerar URL do Google Maps com base nas coordenadas
   private getMapUrl(coordinates: { lat: number, lng: number }): string {
     return `https://www.google.com/maps?q=${coordinates.lat},${coordinates.lng}`;
   }

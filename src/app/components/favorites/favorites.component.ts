@@ -15,7 +15,7 @@ import { CommonModule } from '@angular/common';
 export class FavoritesComponent implements OnInit {
   @ViewChild(IonContent) content!: IonContent;
   
-  showFavorites: boolean = true; // Definido como true por padrão
+  showFavorites: boolean = true;
   favoriteItems: FavoriteItem[] = [];
 
   constructor(
@@ -28,7 +28,6 @@ export class FavoritesComponent implements OnInit {
   ngOnInit() {
     this.loadFavorites();
 
-    // Inscrever para atualizações de favoritos
     this.favoritesService.favorites$.subscribe(favorites => {
       this.favoriteItems = favorites;
     });
@@ -39,17 +38,14 @@ export class FavoritesComponent implements OnInit {
   }
 
   toggleFavorites() {
-    // Se estiver na página de favoritos, navega de volta para a página anterior
     this.router.navigate(['/tabs/terra']);
   }
 
   async openDetails(item: FavoriteItem) {
-    // Obter mapUrl para itens com coordenadas
     const mapUrl = item.coordinates ? 
       `https://www.google.com/maps?q=${item.coordinates.lat},${item.coordinates.lng}` : 
       '';
     
-    // Informações extras baseadas no tipo de fonte
     let extraInfo = [
       {
         icon: 'bookmark-outline',
@@ -63,7 +59,6 @@ export class FavoritesComponent implements OnInit {
       }
     ];
 
-    // Adicionar localização se disponível
     if (item.location) {
       extraInfo.push({
         icon: 'location-outline',
@@ -72,7 +67,6 @@ export class FavoritesComponent implements OnInit {
       });
     }
 
-    // Adicionar categoria se disponível
     if (item.category) {
       extraInfo.push({
         icon: 'pricetag-outline',
@@ -81,7 +75,6 @@ export class FavoritesComponent implements OnInit {
       });
     }
 
-    // Usar o serviço de modal para abrir o modal de detalhes
     const { data } = await this.modalService.openDetailModal({
       id: item.id,
       title: item.title,
@@ -99,29 +92,25 @@ export class FavoritesComponent implements OnInit {
       onToggleFavorite: () => this.toggleItemFavorite(item)
     });
     
-    // Processar dados quando o modal fechar
     if (data && data.favoriteChanged) {
       this.toggleItemFavorite(item);
     }
   }
 
-  // Função para alternar o estado de favorito de um item
   toggleItemFavorite(item: FavoriteItem) {
     this.favoritesService.removeFavorite(item.id, item.source);
     this.presentToast(`${item.title} removido dos favoritos`);
   }
 
-  // Obter rótulo legível para a fonte
   getSourceLabel(source: string): string {
     switch (source) {
-      case 'terra': return 'Minha Terra';
-      case 'gostos': return 'Meus Gostos';
+      case 'terra': return 'A Minha Terra';
+      case 'gostos': return 'Os Meus Gostos';
       case 'explorar': return 'Explorar';
       default: return source;
     }
   }
 
-  // Obter rótulo legível para a categoria
   getCategoryLabel(category: string): string {
     switch (category) {
       case 'convivio': return 'Convívio';

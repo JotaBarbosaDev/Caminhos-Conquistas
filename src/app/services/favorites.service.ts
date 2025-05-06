@@ -7,8 +7,8 @@ export interface FavoriteItem {
   subtitle: string;
   img: string;
   description: string;
-  source: string; // 'terra', 'gostos', etc.
-  category?: string; // 'convivio', 'gastronomia', 'desporto', etc.
+  source: string;
+  category?: string;
   location?: string;
   coordinates?: { lat: number, lng: number };
 }
@@ -26,34 +26,25 @@ export class FavoritesService {
     this.loadAllFavorites();
   }
 
-  // Carrega todos os favoritos de diferentes fontes
   private loadAllFavorites() {
-    // Carrega favoritos da Terra
     this.loadTerraFavorites();
-    
-    // Carrega favoritos da página Gostos
     this.loadGostosFavorites();
-    
-    // Atualiza o subject
     this.favoritesSubject.next(this.favorites);
   }
 
-  // Carregar favoritos da página Terra
   private loadTerraFavorites() {
     try {
       const saved = localStorage.getItem('terra-favorites');
       if (saved) {
         const terraFavs = JSON.parse(saved);
         
-        // Converter para o formato padrão de FavoriteItem
         terraFavs.forEach((fav: {id: string, title: string}) => {
-          // Verificar se já existe para evitar duplicatas
           if (!this.favorites.some(item => item.id === fav.id && item.source === 'terra')) {
             this.favorites.push({
               id: fav.id,
               title: fav.title,
               subtitle: 'Ponto de interesse',
-              img: '', // Será preenchido quando utilizado
+              img: '',
               description: '',
               source: 'terra'
             });
@@ -65,14 +56,12 @@ export class FavoritesService {
     }
   }
 
-  // Carregar favoritos da página Gostos
   private loadGostosFavorites() {
     try {
       const saved = localStorage.getItem('gostosFavorites');
       if (saved) {
         const gostosFavs = JSON.parse(saved);
         
-        // Processar favoritos de convívio
         if (gostosFavs.convivio) {
           gostosFavs.convivio.forEach((fav: {title: string, favorite: boolean}) => {
             if (fav.favorite && !this.favorites.some(item => item.title === fav.title && item.source === 'gostos')) {
@@ -89,7 +78,6 @@ export class FavoritesService {
           });
         }
         
-        // Processar favoritos de gastronomia
         if (gostosFavs.gastronomia) {
           gostosFavs.gastronomia.forEach((fav: {title: string, favorite: boolean}) => {
             if (fav.favorite && !this.favorites.some(item => item.title === fav.title && item.source === 'gostos')) {
@@ -106,7 +94,6 @@ export class FavoritesService {
           });
         }
         
-        // Processar favoritos de desporto
         if (gostosFavs.desporto) {
           gostosFavs.desporto.forEach((fav: {title: string, favorite: boolean}) => {
             if (fav.favorite && !this.favorites.some(item => item.title === fav.title && item.source === 'gostos')) {
@@ -128,17 +115,14 @@ export class FavoritesService {
     }
   }
 
-  // Método para obter todos os favoritos
   getAllFavorites(): FavoriteItem[] {
     return this.favorites;
   }
 
-  // Método para verificar se um item é favorito
   isFavorite(id: string, source: string): boolean {
     return this.favorites.some(item => (item.id === id || item.title === id) && item.source === source);
   }
 
-  // Método para adicionar um favorito
   addFavorite(item: FavoriteItem) {
     if (!this.isFavorite(item.id, item.source)) {
       this.favorites.push(item);
@@ -147,7 +131,6 @@ export class FavoritesService {
     }
   }
 
-  // Método para remover um favorito
   removeFavorite(id: string, source: string) {
     const index = this.favorites.findIndex(item => 
       (item.id === id || item.title === id) && item.source === source
@@ -160,7 +143,6 @@ export class FavoritesService {
     }
   }
 
-  // Método para salvar em localStorage com base na fonte
   private saveToLocalStorage(source: string) {
     if (source === 'terra') {
       const terraFavs = this.favorites
@@ -170,7 +152,6 @@ export class FavoritesService {
       localStorage.setItem('terra-favorites', JSON.stringify(terraFavs));
     } 
     else if (source === 'gostos') {
-      // Formato do gostos
       const convivio = this.favorites
         .filter(item => item.source === 'gostos' && item.category === 'convivio')
         .map(item => ({ title: item.title, favorite: true }));
@@ -191,21 +172,17 @@ export class FavoritesService {
     }
   }
 
-  // Método para sincronizar informações detalhadas do item
   updateFavoriteDetails(items: any[], source: string) {
     const updatedFavorites = [...this.favorites];
     
-    // Para cada item favorito da fonte especificada
     updatedFavorites
       .filter(fav => fav.source === source)
       .forEach(fav => {
-        // Encontrar o item correspondente nos itens fornecidos
         const fullItem = items.find(item => 
           item.id === fav.id || item.title === fav.title
         );
         
         if (fullItem) {
-          // Atualizar detalhes
           fav.img = fullItem.img || fav.img;
           fav.description = fullItem.description || fav.description;
           fav.subtitle = fullItem.subtitle || fav.subtitle;
@@ -218,7 +195,6 @@ export class FavoritesService {
     this.favoritesSubject.next(this.favorites);
   }
 
-  // Recarrega todos os favoritos
   refreshFavorites() {
     this.favorites = [];
     this.loadAllFavorites();
