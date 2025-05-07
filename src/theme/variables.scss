@@ -1,12 +1,10 @@
 :root {
-  /* Marca */
   --ion-color-brand:            #1C9247;
   --ion-color-brand-rgb:        28,146,71;
   --ion-color-brand-contrast:   #ffffff;
   --ion-color-brand-shade:      #17803d;
   --ion-color-brand-tint:       #38a06c;
 
-  /* Mapear para primary */
   --ion-color-primary:          var(--ion-color-brand);
   --ion-color-primary-rgb:      var(--ion-color-brand-rgb);
   --ion-color-primary-contrast: var(--ion-color-brand-contrast);
